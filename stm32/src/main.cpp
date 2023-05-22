@@ -1,26 +1,33 @@
+#include <Arduino.h>
+#include <STM32FreeRTOS.h>
 #include "DHT.h"
 #include "SparkFun_SGP30_Arduino_Library.h" // Click here to get the library: http://librarymanager/All#SparkFun_SGP30
 #include <Wire.h>
- 
+#include <SoftwareSerial.h>
+
 SGP30 mySensor; //create an object of the SGP30 class
 DHT dht;
 
-int a = 13;
-int b = 25;
-#include <SoftwareSerial.h>
-#define ESP_RX  PA8
-#define ESP_TX PA7_ALT1
+#define ESP_RX PA1
+#define ESP_TX PA4
 #define DHT_PIN PA0_ALT1
+
 // #define GAS_PIN = 
 SoftwareSerial chat(ESP_RX,ESP_TX); // RX, TX to NodeMCU
 int i;
+
+int a = 13;
+int b = 25;
+
 
 void setup()
 {
   chat.begin(4800);
   Serial.begin(9600);
-  //Serial.println();
-  //Serial.println("Status\tHumidity (%)\tTemperature (C)\t(F)");
+
+  // while (!Serial); // wait for serial port to connect. Needed for native USB port only
+  
+  // Serial.println("Status\tHumidity (%)\tTemperature (C)\t(F)");
 
   dht.setup(DHT_PIN); // data pin 2
 
@@ -65,6 +72,7 @@ void loop()
   //Serial.println(" ppb");
   //delay(1000);
    if (chat.readString()){
+    Serial.println("Chat recv!!");
      if(chat.readString()== "Q1"){ //มีการถามคำถาม Question1 ส่งข้อมูลตัวแปร a ออกไป
         delay(dht.getMinimumSamplingPeriod());
 
@@ -72,8 +80,8 @@ void loop()
         float temperature = dht.getTemperature(); // ดึงค่าอุณหภูมิ
 
         //chat.print(dht.getStatusString());
-        chat.print(humidity);
-        Serial.print(humidity);
+        chat.println(humidity);
+        Serial.println(humidity);
         //chat.print(temperature);
         //chat.print(dht.toFahrenheit(temperature));
 
