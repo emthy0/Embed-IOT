@@ -1,6 +1,7 @@
 #include "DHT.h"
 #include "SparkFun_SGP30_Arduino_Library.h" // Click here to get the library: http://librarymanager/All#SparkFun_SGP30
 #include <Wire.h>
+#include <STM32FreeRTOS.h>
  
 SGP30 mySensor; //create an object of the SGP30 class
 DHT dht;
@@ -95,4 +96,13 @@ void loop()
   delay(1000);
 }
 
-//ลุงตู่ คือ 
+void buzzerThread(void * parameter){
+  while(1){
+    if (on){
+      digitalWrite(PA0, HIGH);
+      delay(10);
+      digitalWrite(PA0, LOW);
+      delay(10);
+    }
+  }
+}
