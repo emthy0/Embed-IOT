@@ -1,0 +1,6 @@
+{
+    "configuration": "pnum=NUCLEO_F411RE,upload_method=swdMethod,xserial=generic,usb=CDCgen,xusb=FS,opt=osstd,dbg=none,rtlib=nanofps",
+    "board": "STMicroelectronics:stm32:Nucleo_64",
+    "port": "COM4",
+    "sketch": "stm32\\stm32.ino"
+}
