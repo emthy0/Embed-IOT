@@ -18,6 +18,7 @@ enum ControllerMode
 class CurtainController
 {
   public:
+    CurtainController();
     CurtainController(int pin);
     void setMode(enum CurtainMode mode);
     void setLevel(int level);

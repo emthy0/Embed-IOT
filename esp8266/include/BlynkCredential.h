@@ -1,0 +1,10 @@
+// #ifndef BLYNKCREDENTIAL_H
+// #define BLYNKCREDENTIAL_H
+
+#define BLYNK_TEMPLATE_ID "TMPL6rXyIyR1E"
+#define BLYNK_TEMPLATE_NAME "SMARTCURTAIN"
+#define BLYNK_AUTH_TOKEN "drFzungMkQBmEgqMe5r8Q8_wVuwsa_4Q"
+#define BLYNK_SSID "IOT8D"
+#define BLYNK_PASS "iot888=D"
+
+// #endif
