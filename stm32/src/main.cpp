@@ -18,8 +18,8 @@ SoftwareSerial chat(ESP_RX,ESP_TX); // RX, TX to NodeMCU
 int i;
 
 // define tasks
-void buzzerThread(void *pvParameters);
-bool on = false;
+void buzzerThread(void *pvParameters); // if buzzerOn is true, the buzzer will buzz
+bool buzzerOn = false;
 
 void setup()
 {
@@ -104,14 +104,14 @@ void loop()
   delay(1000);
 }
 
-// task
+// tasks
 void buzzerThread(void * pvParameters){
 
   (void) pvParameters;
   pinMode(BUZZER_PIN, OUTPUT);
 
   while(true){
-    if (on){
+    if (buzzerOn){
       digitalWrite(BUZZER_PIN, HIGH);
       vTaskDelay(10);
       digitalWrite(BUZZER_PIN, LOW);
