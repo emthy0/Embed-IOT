@@ -4,7 +4,7 @@
 #include <SoftwareSerial.h>
 #include <ESP8266WiFi.h>
 #include <BlynkSimpleEsp8266_SSL.h>
-
+#include <CurtainController.h>
 #define BLYNK_TEMPLATE_ID "TMPL6rXyIyR1E"
 #define BLYNK_TEMPLATE_NAME "SMARTCURTAIN"
 #define BLYNK_AUTH_TOKEN "drFzungMkQBmEgqMe5r8Q8_wVuwsa_4Q"
