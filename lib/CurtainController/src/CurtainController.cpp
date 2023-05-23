@@ -8,28 +8,23 @@
 #include "Arduino.h"
 #include "CurtainController.h"
 
-Morse::Morse(int pin)
+CurtainController::CurtainController(int pin)
 {
   _pin = pin;
-}
-
-void Morse::begin()
-{
   pinMode(_pin, OUTPUT);
 }
 
-void Morse::dot()
+void CurtainController::setMode(enum CurtainMode mode)
 {
-  digitalWrite(_pin, HIGH);
-  delay(250);
-  digitalWrite(_pin, LOW);
-  delay(250);  
+  _currentMode = mode;
 }
 
-void Morse::dash()
+void CurtainController::setLevel(int level)
 {
-  digitalWrite(_pin, HIGH);
-  delay(1000);
-  digitalWrite(_pin, LOW);
-  delay(250);
+  _currentLevel = level;
+}
+
+int CurtainController::getLevel()
+{
+  return _currentLevel;
 }

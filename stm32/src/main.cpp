@@ -4,7 +4,8 @@
 #include "SparkFun_SGP30_Arduino_Library.h" // Click here to get the library: http://librarymanager/All#SparkFun_SGP30
 #include <Wire.h>
 #include <SoftwareSerial.h>
-
+#include <BuzzerController.h>
+#include <CurtainController.h>
 SGP30 mySensor; //create an object of the SGP30 class
 DHT dht;
 

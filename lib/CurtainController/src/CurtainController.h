@@ -3,23 +3,30 @@
 
 #include "Arduino.h"
 
-enum Mode
+enum CurtainMode
 {
   MANUAL,
   AUTO
+};
+
+enum ControllerMode
+{
+  MASTER,
+  SLAVE
 };
 
 class CurtainController
 {
   public:
     CurtainController(int pin);
-    void setMode(enum Mode mode);
+    void setMode(enum CurtainMode mode);
     void setLevel(int level);
-    void dash();
+    int getLevel();
   private:
+    int _pin;
     int _currentLevel;
     int _currentMode;
-    int _controllerMode = CONTROLLER_PLATFORM
+    int _controllerMode = CONTROLLER_PLATFORM;
 };
 
 #endif
