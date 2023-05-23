@@ -44,6 +44,8 @@ void setup()
   
 }
 
+#include "servo.cpp"
+
 int counter = 0;
 void loop()
 {
