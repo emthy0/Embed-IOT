@@ -8,12 +8,13 @@ class BuzzerController
 {
   public:
     BuzzerController(int pin);
-    void setMode(enum Mode mode);
-    void setLevel(int level);
-    void dash();
+    void activate();
+    void deactivate();
+    bool getState();
+    int getControllerMode();
   private:
-    int _currentLevel;
-    int _currentMode;
+    int _pin;
+    bool _currentState;
     int _controllerMode = CONTROLLER_PLATFORM;
 };
 

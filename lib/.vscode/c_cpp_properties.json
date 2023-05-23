@@ -18,7 +18,10 @@
             "compilerPath": "cl.exe",
             "cStandard": "c17",
             "cppStandard": "c++17",
-            "intelliSenseMode": "windows-msvc-x64"
+            "intelliSenseMode": "windows-msvc-x64",
+            "compilerArgs": [
+                "'-D CONTROLLER_PLATFORM=1'"
+            ]
         }
     ],
     "version": 4

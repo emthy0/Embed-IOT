@@ -17,7 +17,7 @@ DHT dht;
 #define BUZZER_PIN PA0
 SoftwareSerial chat(ESP_RX,ESP_TX); // RX, TX to NodeMCU
 int i;
-
+BuzzerController buzzer(BUZZER_PIN);
 // define tasks
 void buzzerThread(void *pvParameters); // if buzzerOn is true, the buzzer will buzz
 bool buzzerOn = false;
@@ -29,7 +29,7 @@ void setup()
 {
   chat.begin(4800);
   Serial.begin(9600);
-
+  Serial.println(buzzer.getControllerMode());
   // while (!Serial); // wait for serial port to connect. Needed for native USB port only
   
   // Serial.println("Status\tHumidity (%)\tTemperature (C)\t(F)");
