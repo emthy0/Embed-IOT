@@ -73,14 +73,14 @@ void loop()
   Serial.println(" ppb");
 
   if (chat.readString() != ""){
-     if(chat.readString() == "1"){ //Send all val to esp8266 in term hummidity  tem(F)  LPG(ppm) CO(ppm) SMOKE(ppm) CO2(ppb) TVOC(ppb) LDR
+     if(chat.readString() == "1"){ //Send all val to esp8266 in term hummidity  tem(C)  LPG(ppm) CO(ppm) SMOKE(ppm) CO2(ppb) TVOC(ppb) LDR
         delay(dht.getMinimumSamplingPeriod());
         float humidity = dht.getHumidity(); // ดึงค่าความชื้น
         float temperature = dht.getTemperature(); // ดึงค่าอุณหภูมิ
 
         chat.print(humidity);
         chat.print("\t");
-        chat.print(dht.toFahrenheit(temperature));
+        chat.print((dht.toFahrenheit(temperature)/100000-32)*5/8);
         chat.print("\t");
         chat.print(MQGetGasPercentage(MQRead(MQ_PIN)/Ro,GAS_LPG));
         chat.print("\t");
@@ -97,7 +97,7 @@ void loop()
         
         Serial.print(humidity);
         Serial.print("\t");
-        Serial.print(dht.toFahrenheit(temperature), 1);
+        Serial.print((dht.toFahrenheit(temperature)/100000-32)*5/8, 1);
         Serial.print("\t");
         Serial.print(MQGetGasPercentage(MQRead(MQ_PIN)/Ro,GAS_LPG));
         Serial.print("\t");
