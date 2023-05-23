@@ -27,6 +27,10 @@ float           LPGCurve[3]  =  {2.3,0.21,-0.47};
 float           COCurve[3]  =  {2.3,0.72,-0.34};    
 float           SmokeCurve[3] ={2.3,0.53,-0.44};                                               
 float           Ro           =  10;
+
+int analogPin = PA2;
+int val = 0;
+
 void setup()
 {
   chat.begin(4800);
@@ -60,6 +64,7 @@ void setup()
 
 void loop()
 {
+  val = analogRead(analogPin);
   mySensor.measureAirQuality();
   Serial.print("CO2: ");
   Serial.print(mySensor.CO2);
@@ -68,7 +73,7 @@ void loop()
   Serial.println(" ppb");
 
   if (chat.readString() != ""){
-     if(chat.readString() == "1"){ //Send all val to esp8266 in term hummidity  tem(F)  LPG(ppm) CO(ppm) SMOKE(ppm) CO2(ppb) TVOC(ppb)
+     if(chat.readString() == "1"){ //Send all val to esp8266 in term hummidity  tem(F)  LPG(ppm) CO(ppm) SMOKE(ppm) CO2(ppb) TVOC(ppb) LDR
         delay(dht.getMinimumSamplingPeriod());
         float humidity = dht.getHumidity(); // ดึงค่าความชื้น
         float temperature = dht.getTemperature(); // ดึงค่าอุณหภูมิ
@@ -87,6 +92,8 @@ void loop()
         chat.print("\t");
         chat.print(mySensor.TVOC);
         chat.print("\t");
+        chat.print(val);
+        chat.print("\t");
         
         Serial.print(humidity);
         Serial.print("\t");
@@ -101,6 +108,8 @@ void loop()
         Serial.print(mySensor.CO2);
         Serial.print("\t");
         Serial.print(mySensor.TVOC);
+        Serial.print("\t");
+        Serial.print(val);
         Serial.print("\t");
      }
      else if(chat.readString() == "00"){ //Setled ON/OFF/Auto
