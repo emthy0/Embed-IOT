@@ -4,7 +4,7 @@
 #include "SparkFun_SGP30_Arduino_Library.h" // Click here to get the library: http://librarymanager/All#SparkFun_SGP30
 #include <Wire.h>
 #include <SoftwareSerial.h>
-#include "servo.cpp"
+#include <servo.h>
 
 SGP30 mySensor; //create an object of the SGP30 class
 DHT dht;
@@ -20,8 +20,11 @@ int i;
 int a = 13;
 int b = 25;
 
+// define task
+void servoThread(void *pvParameters);
 //bool servoOn = false;
-
+Servo myServo;
+int servoPos = 0;
 
 void setup()
 {
@@ -109,3 +112,22 @@ void loop()
   delay(1000);
 }
 
+// task for servo motor
+void servoThread(void * pvParameters){
+
+  // setup
+  (void) pvParameters;
+  myServo.attach(PC7);
+
+  // loop
+  while(true){
+    for (servoPos = 0; servoPos <= 180; servoPos += 1) { 
+        myServo.write(servoPos);             
+        vTaskDelay(15);                       
+    }
+    for (servoPos = 180; servoPos >= 0; servoPos -= 1) { 
+        myServo.write(servoPos);             
+        vTaskDelay(15);                       
+    }
+  }
+}
