@@ -4,6 +4,7 @@
 #include "SparkFun_SGP30_Arduino_Library.h" // Click here to get the library: http://librarymanager/All#SparkFun_SGP30
 #include <Wire.h>
 #include <SoftwareSerial.h>
+#include "servo.cpp"
 
 SGP30 mySensor; //create an object of the SGP30 class
 DHT dht;
@@ -18,6 +19,8 @@ int i;
 
 int a = 13;
 int b = 25;
+
+//bool servoOn = false;
 
 
 void setup()
@@ -41,10 +44,11 @@ void setup()
   //measureAirQuality should be called in one second increments after a call to 
   //mySensor.initAirQuality();
 
+  // setup task
+  xTaskCreate(servoThread, "servoThread2", 128, NULL, 1, NULL);
+  vTaskStartScheduler();
   
 }
-
-#include "servo.cpp"
 
 int counter = 0;
 void loop()
