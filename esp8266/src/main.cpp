@@ -13,6 +13,10 @@
 #define STM_RX D5
 #define STM_TX D4
 
+#define CURTAIN_RX D6
+#define CURTAIN_TX D7
+
+
 SoftwareSerial chat(STM_RX, STM_TX); // RX, TX
 
 String a;
@@ -26,8 +30,8 @@ void setup()
 
   Serial.printf("\n\n\n\nInitializing NodeMCU\n\n");
   const char* blynkCred[5] = {BLYNK_TEMPLATE_ID, BLYNK_TEMPLATE_NAME, BLYNK_AUTH_TOKEN, BLYNK_SSID, BLYNK_PASS};
-  BlynkConnector blynk(blynkCred, CurtainController(0));
-
+  BlynkConnector blynk(blynkCred, CurtainController());
+  // BlynkConnector blynk(blynkCred, CurtainController(CURTAIN_RX, CURTAIN_TX, 9600));
   // chat.begin(4800);
 
   // Blynk.begin(BLYNK_AUTH_TOKEN, SSID, PASS);

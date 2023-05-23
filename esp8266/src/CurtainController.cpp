@@ -1,17 +1,18 @@
 #include "Arduino.h"
+#include <SoftwareSerial.h>
 #include "CurtainController.h"
 
 
 CurtainController::CurtainController()
-{
-  _pin = 9999;  
+{ 
 }
 
 
-CurtainController::CurtainController(int pin)
-{
-  _pin = pin;  
-}
+// CurtainController::CurtainController(int RX_pin, int TX_pin, int baudrate)
+// {
+//   SoftwareSerial _chat(RX_pin, TX_pin);
+//   _chat.begin(baudrate);
+// }
 
 void CurtainController::setMode(enum CurtainMode mode)
 {
