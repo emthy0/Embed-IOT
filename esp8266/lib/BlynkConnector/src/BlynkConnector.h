@@ -3,13 +3,13 @@
 
 #include "Arduino.h"
 // #include <BlynkAdapter.h>
-
+// #include <BlynkCredential.h>
 #include <CurtainController.h>
 
 class BlynkConnector
 {
   public:
-    BlynkConnector(CurtainController curtainController);
+    BlynkConnector(const char* blynkCred[5], CurtainController curtainController);
     void SendHumidity(double Humidity);
     void SendTemperature(double Temp);
   private:

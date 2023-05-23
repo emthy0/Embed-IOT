@@ -1,16 +1,16 @@
-
+#define BLYNK_PRINT Serial
 #include "Arduino.h"
-#include <BlynkCredential.h>
 #include <ESP8266WiFi.h>
 #include "BlynkAdapter.h"
 #include "BlynkConnector.h"
 #include "CurtainController.h"
 // #include "CurtainController.*"
 
-BlynkConnector::BlynkConnector(CurtainController acurtainController)
+BlynkConnector::BlynkConnector(const char* blynkCred[5], CurtainController acurtainController)
 {
   _curtainController = acurtainController;
-  Blynk.begin(BLYNK_AUTH_TOKEN, BLYNK_SSID, BLYNK_PASS);
+  Blynk.begin(blynkCred[2], blynkCred[3], blynkCred[4]);
+  Serial.println(Blynk.connected());
 }
 
 void BlynkConnector::SendHumidity(double Humidity)

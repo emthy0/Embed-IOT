@@ -1,7 +1,7 @@
 #define BLYNK_PRINT Serial
 #define NO_GLOBAL_BLYNK true
 #include <BlynkSimpleEsp8266.h>
-#include <BlynkCredential.h>
+#include <BlynkConfig.h>
 #include <BlynkAdapter.h>
 #include <Arduino.h>
 #include <SoftwareSerial.h>
@@ -17,14 +17,18 @@ SoftwareSerial chat(STM_RX, STM_TX); // RX, TX
 
 String a;
 
-BlynkConnector blynk(CurtainController(0));
+
 
 void setup()
 {
 
-  Serial.begin(9600);
+  Serial.begin(38400);
 
-  chat.begin(4800);
+  Serial.printf("\n\n\n\nInitializing NodeMCU\n\n");
+  const char* blynkCred[5] = {BLYNK_TEMPLATE_ID, BLYNK_TEMPLATE_NAME, BLYNK_AUTH_TOKEN, BLYNK_SSID, BLYNK_PASS};
+  BlynkConnector blynk(blynkCred, CurtainController(0));
+
+  // chat.begin(4800);
 
   // Blynk.begin(BLYNK_AUTH_TOKEN, SSID, PASS);
 
