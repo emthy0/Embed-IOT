@@ -13,8 +13,13 @@ int b = 25;
 #define ESP_TX PA7_ALT1
 #define DHT_PIN PA0_ALT1
 // #define GAS_PIN = 
+#define BUZZER_PIN PA0
 SoftwareSerial chat(ESP_RX,ESP_TX); // RX, TX to NodeMCU
 int i;
+
+// define tasks
+void buzzerThread(void *pvParameters);
+bool on = false;
 
 void setup()
 {
@@ -35,6 +40,9 @@ void setup()
   //measureAirQuality should be called in one second increments after a call to 
   //mySensor.initAirQuality();
 
+  // setup task
+  xTaskCreate(buzzerThread, "buzzerThread", 128, NULL, 1, NULL);
+  vTaskStartScheduler();
   
 }
 
@@ -96,13 +104,21 @@ void loop()
   delay(1000);
 }
 
-void buzzerThread(void * parameter){
-  while(1){
+// task
+void buzzerThread(void * pvParameters){
+
+  (void) pvParameters;
+  pinMode(BUZZER_PIN, OUTPUT);
+
+  while(true){
     if (on){
-      digitalWrite(PA0, HIGH);
-      delay(10);
-      digitalWrite(PA0, LOW);
-      delay(10);
+      digitalWrite(BUZZER_PIN, HIGH);
+      vTaskDelay(10);
+      digitalWrite(BUZZER_PIN, LOW);
+      vTaskDelay(10);
+    }
+    else{
+      digitalWrite(BUZZER_PIN, LOW);
     }
   }
 }
