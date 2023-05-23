@@ -21,9 +21,8 @@ int a = 13;
 int b = 25;
 
 // define task
-void servoThread(void *pvParameters);
+//void servoThread(void *pvParameters);
 //bool servoOn = false;
-Servo myServo;
 int servoPos = 0;
 
 void setup()
@@ -48,8 +47,8 @@ void setup()
   //mySensor.initAirQuality();
 
   // setup task
-  xTaskCreate(servoThread, "servoThread2", 128, NULL, 1, NULL);
-  vTaskStartScheduler();
+  //xTaskCreate(servoThread, "servoThread2", 128, NULL, 1, NULL);
+  //vTaskStartScheduler();
   
 }
 
@@ -112,22 +111,24 @@ void loop()
   delay(1000);
 }
 
-// task for servo motor
-void servoThread(void * pvParameters){
 
-  // setup
-  (void) pvParameters;
-  myServo.attach(PC7);
+// // task for servo motor
+// void servoThread(void * pvParameters){
 
-  // loop
-  while(true){
-    for (servoPos = 0; servoPos <= 180; servoPos += 1) { 
-        myServo.write(servoPos);             
-        vTaskDelay(15);                       
-    }
-    for (servoPos = 180; servoPos >= 0; servoPos -= 1) { 
-        myServo.write(servoPos);             
-        vTaskDelay(15);                       
-    }
-  }
-}
+//   // setup
+//   Servo myServo;
+//   (void) pvParameters;
+//   myServo.attach(PC7);
+
+//   // loop
+//   while(true){
+//     for (servoPos = 0; servoPos <= 180; servoPos += 1) { 
+//         myServo.write(servoPos);             
+//         vTaskDelay(15);                       
+//     }
+//     for (servoPos = 180; servoPos >= 0; servoPos -= 1) { 
+//         myServo.write(servoPos);             
+//         vTaskDelay(15);                       
+//     }
+//   }
+// }
