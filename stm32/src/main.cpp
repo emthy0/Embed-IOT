@@ -22,7 +22,7 @@ int b = 25;
 
 // define task
 void servoThread(void *pvParameters);
-bool servoOn = false;
+bool servoOn = true;
 int servoPos = 0;
 
 void setup()
