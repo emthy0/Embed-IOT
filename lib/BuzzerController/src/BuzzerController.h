@@ -4,6 +4,8 @@
 
 #include "Arduino.h"
 
+void buzzerThread(void *pvParameters); 
+
 class BuzzerController
 {
   public:

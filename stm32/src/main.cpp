@@ -19,7 +19,7 @@ SoftwareSerial chat(ESP_RX,ESP_TX); // RX, TX to NodeMCU
 int i;
 BuzzerController buzzer(BUZZER_PIN);
 // define tasks
-void buzzerThread(void *pvParameters); // if buzzerOn is true, the buzzer will buzz
+// if buzzerOn is true, the buzzer will buzz
 bool buzzerOn = false;
 int a = 13;
 int b = 25;
@@ -29,7 +29,7 @@ void setup()
 {
   chat.begin(4800);
   Serial.begin(9600);
-  Serial.println(buzzer.getControllerMode());
+  Serial.printf("Buzzer Controller Mode %d\n",buzzer.getControllerMode());
   // while (!Serial); // wait for serial port to connect. Needed for native USB port only
   
   // Serial.println("Status\tHumidity (%)\tTemperature (C)\t(F)");
@@ -47,7 +47,7 @@ void setup()
   //mySensor.initAirQuality();
 
   // setup task
-  xTaskCreate(buzzerThread, "buzzerThread", 128, NULL, 1, NULL);
+  buzzer.activate();
   vTaskStartScheduler();
   
 }
@@ -111,21 +111,3 @@ void loop()
   delay(1000);
 }
 
-// tasks
-void buzzerThread(void * pvParameters){
-
-  (void) pvParameters;
-  pinMode(BUZZER_PIN, OUTPUT);
-
-  while(true){
-    if (buzzerOn){
-      digitalWrite(BUZZER_PIN, HIGH);
-      vTaskDelay(10);
-      digitalWrite(BUZZER_PIN, LOW);
-      vTaskDelay(10);
-    }
-    else{
-      digitalWrite(BUZZER_PIN, LOW);
-    }
-  }
-}

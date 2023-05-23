@@ -7,7 +7,9 @@
                 "${vcpkgRoot}/x86-windows/include",
                 "C:/Users/ironp/.platformio/packages/framework-arduinoststm32/cores/arduino",
                 "C:/Users/ironp/.platformio/packages/framework-arduinoststm32/cores/arduino/stm32",
-                "C:/Users/ironp/.platformio/packages/framework-arduinoststm32/cores/arduino/stm32/LL"
+                "C:/Users/ironp/.platformio/packages/framework-arduinoststm32/cores/arduino/stm32/LL",
+                "C:/Users/ironp/Project/Embed-IOT/stm32/.pio/libdeps/nucleo_f411re/STM32duino FreeRTOS/src",
+                "C:/Users/ironp/.platformio/packages/toolchain-gccarmnoneeabi/arm-none-eabi/include"
             ],
             "defines": [
                 "_DEBUG",
