@@ -1,20 +1,17 @@
 #include <DHTController.h>
 #include "DHT.h"
 
-void DHTController::readSensorThread(void *pvParameters)
-{
-}
-
-DHTController::DHTController()
+DHTController::DHTController() : TaskClass("DHT Thread", 1000, 1000)
 {
   //  if (_thread.joinable())
   // {
   //   _thread.join();
   // }
   // else {
-    
+
   // }
-  xTaskCreate(&DHTController::readSensorThread, "DHT Thread", 1000, (void *)this, 1, &_thread);
+  // TaskClass("DHT Thread", 1000, 1000);
+  // xTaskCreate(&DHTController::readSensorThread, "DHT Thread", 1000, (void *)this, 1, &_thread);
 }
 
 // DHTController::~DHTController()
@@ -51,3 +48,17 @@ int DHTController::getHumidity()
   return _dht.getHumidity();
 }
 
+void DHTController::readSensorTask()
+{
+  //   DHTController *dhtController = static_cast<DHTController *>();
+  //   dhtController->setTemperature(dhtController->getTemperature());
+  //   dhtController->setHumidity(dhtController->getHumidity());
+  this->setTemperature(this->getTemperature());
+  this->setHumidity(this->getHumidity());
+  vTaskDelay(1000);
+}
+
+// void DHTController : Taskbase::taskfun(void *params)
+// {
+//   static_cast<DHTController *>(params)->readSensorThread();
+// }
