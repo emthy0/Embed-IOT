@@ -14,3 +14,5 @@
 #define MOTOR_PIN_IN1 PA4
 #define MOTOR_PIN_IN2 PB0
 #define MOTOR_PWM PB3
+
+#define LED_PIN PB5

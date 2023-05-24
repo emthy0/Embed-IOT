@@ -8,12 +8,14 @@
 #include <CurtainController.h>
 #include <SensorController.h>
 #include <MotorController.h>
+#include <LEDController.h>
 #include <PinConfig.h>
 
 
 SoftwareSerial chat(ESP_RX,ESP_TX); // RX, TX to NodeMCU
 BuzzerController buzzer(BUZZER_PIN);
 SensorController sensorController;
+LEDController led(LED_PIN);
 MotorController motor(MOTOR_PIN_IN1, MOTOR_PIN_IN2, MOTOR_PWM);
 
 
