@@ -9,10 +9,13 @@ class SlaveChatController
   public:
     SlaveChatController();
     SlaveChatController(int RX, int TX, int baudrate);
-    SendCommand(hex command);
+    // SendCommand(hex command);
+    void RecvCommand();
+    static SoftwareSerial chat;
   private:
-    static SoftwareSerial _chat;
     static int _RX;
     static int _TX;
     static int _baudrate;
 };
+
+#endif

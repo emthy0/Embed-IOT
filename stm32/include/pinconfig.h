@@ -2,6 +2,7 @@
 
 #define ESP_RX PA1
 #define ESP_TX PA4
+#define ESP_BAUDRATE 4800
 
 // SENSOR PIN CONFIGURATION //
 

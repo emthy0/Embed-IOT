@@ -10,19 +10,20 @@
 #include <MotorController.h>
 #include <LEDController.h>
 #include <PinConfig.h>
+#include <SlaveChatController.h>
 
-
-SoftwareSerial chat(ESP_RX,ESP_TX); // RX, TX to NodeMCU
+SoftwareSerial SlaveChatController::chat(ESP_RX,ESP_TX); // RX, TX to NodeMCU
 BuzzerController buzzer(BUZZER_PIN);
 SensorController sensorController;
 LEDController led(LED_PIN);
 MotorController motor(MOTOR_PIN_IN1, MOTOR_PIN_IN2, MOTOR_PWM);
-
+// SlaveChatController::chat = SoftwareSerial(ESP_RX, ESP_TX)
+SlaveChatController slaveChatController(ESP_RX, ESP_TX, ESP_BAUDRATE);
 
 
 void setup()
 {
-  chat.begin(4800);
+  // SlaveChatController::chat.begin(4800);
   Serial.begin(9600);
   
   sensorController.setDHTpin(DHT_PIN);
