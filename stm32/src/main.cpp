@@ -21,8 +21,7 @@ DHT dht;
 SoftwareSerial chat(ESP_RX,ESP_TX); // RX, TX to NodeMCU
 int i;
 BuzzerController buzzer(BUZZER_PIN);
-// define tasks
-void motorThread(void *pvParameters);
+MotorController motor(MOTOR_PIN_IN1, MOTOR_PIN_IN2, MOTOR_PWM);
 // if buzzerOn is true, the buzzer will buzz
 bool buzzerOn = false;
 int motorMode = -1; // 0 means stop, -1 means backward, 1 means forward
@@ -116,32 +115,4 @@ void loop()
 
   i++;
   delay(1000);
-}
-
-void motorThread(void * pvParameters){
-
-  // setup
-  (void) pvParameters;
-  pinMode(MOTOR_PIN_IN1, OUTPUT);
-  pinMode(MOTOR_PIN_IN2, OUTPUT);
-  pinMode(MOTOR_PWM, OUTPUT);
-
-  // loop
-  while(true){
-    if(motorMode == 0){
-      vTaskDelay(15);
-      continue;
-    }
-    else if(motorMode == 1){
-      digitalWrite(MOTOR_PIN_IN1, HIGH);
-      digitalWrite(MOTOR_PIN_IN2, LOW);
-      analogWrite(MOTOR_PWM, (motorPower*255/100));
-      vTaskDelay(15);
-    }else{
-      digitalWrite(MOTOR_PIN_IN1, LOW);
-      digitalWrite(MOTOR_PIN_IN2, HIGH);
-      analogWrite(MOTOR_PWM, (motorPower*255/100));
-      vTaskDelay(15);
-    }
-  }
 }
