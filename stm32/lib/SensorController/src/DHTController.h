@@ -4,7 +4,7 @@
 
 #include <STM32FreeRTOS.h>
 #include <Taskbase.h>
-class DHTController : public TaskClass
+class DHTController : protected TaskClass
 {
 public:
   DHTController();
@@ -15,11 +15,10 @@ public:
 private:
   int _pin = -1;
   DHT _dht;
-  int _temperature;
-  int _humidity;
-  xTaskHandle _threadHandler;
-  void setTemperature(int temperature);
-  void setHumidity(int humidity);
+  int _temperature = -1;
+  int _humidity = -1;
+  void _setTemperature(int temperature);
+  void _setHumidity(int humidity);
   void readSensorTask() override;
 };
 

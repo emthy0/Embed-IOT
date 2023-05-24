@@ -3,24 +3,7 @@
 
 DHTController::DHTController() : TaskClass("DHT Thread", 1000, 1000)
 {
-  //  if (_thread.joinable())
-  // {
-  //   _thread.join();
-  // }
-  // else {
-
-  // }
-  // TaskClass("DHT Thread", 1000, 1000);
-  // xTaskCreate(&DHTController::readSensorThread, "DHT Thread", 1000, (void *)this, 1, &_thread);
 }
-
-// DHTController::~DHTController()
-// {
-//   if (_thread.joinable())
-//   {
-//     _thread.join();
-//   }
-// }
 
 void DHTController::setPin(int pin)
 {
@@ -28,12 +11,12 @@ void DHTController::setPin(int pin)
   _dht.setup(_pin);
 }
 
-void DHTController::setTemperature(int temperature)
+void DHTController::_setTemperature(int temperature)
 {
   _temperature = temperature;
 }
 
-void DHTController::setHumidity(int humidity)
+void DHTController::_setHumidity(int humidity)
 {
   _humidity = humidity;
 }
@@ -50,11 +33,12 @@ int DHTController::getHumidity()
 
 void DHTController::readSensorTask()
 {
-  //   DHTController *dhtController = static_cast<DHTController *>();
-  //   dhtController->setTemperature(dhtController->getTemperature());
-  //   dhtController->setHumidity(dhtController->getHumidity());
-  this->setTemperature(this->getTemperature());
-  this->setHumidity(this->getHumidity());
+  if (_pin == -1)
+  {
+    return;
+  }
+  this->_setTemperature(_dht.getTemperature());
+  this->_setHumidity(_dht.getHumidity());
   vTaskDelay(1000);
 }
 
