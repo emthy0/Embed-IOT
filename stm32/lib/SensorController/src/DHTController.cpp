@@ -39,7 +39,7 @@ void DHTController::readSensorTask()
   }
   this->_setTemperature(_dht.getTemperature());
   this->_setHumidity(_dht.getHumidity());
-  vTaskDelay(1000);
+  vTaskDelay(_dht.getMinimumSamplingPeriod());
 }
 
 // void DHTController : Taskbase::taskfun(void *params)

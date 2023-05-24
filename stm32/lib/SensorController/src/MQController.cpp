@@ -75,6 +75,7 @@ void MQController::readSensorTask()
     this->_setCO(MQGetPercentage(rs_ro_ratio, _COCurve));
     this->_setLPG(MQGetPercentage(rs_ro_ratio, _LPGCurve));
     this->_setSmoke(MQGetPercentage(rs_ro_ratio, _SmokeCurve));
+    vTaskDelay(1000);
 
 
 }

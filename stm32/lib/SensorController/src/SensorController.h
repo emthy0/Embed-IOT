@@ -2,25 +2,29 @@
 #define SENSORCONTROLLER_H
 
 #include <DHTController.h>
+#include <MQController.h>
 
-class SensorController : public DHTController
+class SensorController : protected DHTController, protected MQController
 {
 public:
   SensorController();
-  // void setDHTpin(int pin);
+  void setDHTpin(int pin);
   void setMQpin(int pin);
   void setSGPpin(int pin);
   void setLDRpin(int pin);
 
   int getCO2();
   int getTVOC();
-  // float getTemperature();
-  // float getHumidity();
+  float getTemperature();
+  float getHumidity();
   int getCO();
   int getLPG();
   int getSmoke();
 
 private:
+
+  // DHTController _dhtController;
+  // MQController _mqController;
   // int _dht_pin;
   int _mq_pin;
   int _sgp_pin;
