@@ -4,13 +4,13 @@
 #include <DHTController.h>
 #include <MQController.h>
 
+
 class SensorController : protected DHTController, protected MQController
 {
 public:
   SensorController();
   void setDHTpin(int pin);
   void setMQpin(int pin);
-  void setSGPpin(int pin);
   void setLDRpin(int pin);
 
   int getCO2();

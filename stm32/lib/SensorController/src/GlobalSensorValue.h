@@ -1,0 +1,6 @@
+#ifndef GLOBALSENSORVALUE_H
+#define GLOBALSENSORVALUE_H
+
+extern int GLOBAL_HUMIDITY;
+
+#endif

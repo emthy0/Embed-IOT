@@ -15,10 +15,6 @@ void SensorController::setMQpin(int pin)
     MQController::setPin(pin);
 }
 
-void SensorController::setSGPpin(int pin)
-{
-    _sgp_pin = pin;
-}
 
 void SensorController::setLDRpin(int pin)
 {
@@ -50,4 +46,6 @@ int SensorController::getSmoke()
 {
     return MQController::getSmoke();
 }
+
+
 

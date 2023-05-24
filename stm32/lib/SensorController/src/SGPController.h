@@ -13,6 +13,8 @@ public:
 //   void setPin(int pin);
   int getCO2();
   int getTVOC();
+  void setHumidity(int humidity);
+  // int humidity = 50;
 private:
     SGP30 _sgpSensor;
     // int _pin = -1;

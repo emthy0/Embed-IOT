@@ -1,4 +1,5 @@
 #include <SGPController.h>
+#include <GlobalSensorValue.h>
 
 SGPController::SGPController() : TaskClass("SGP Thread", 1000, 1000)
 {
@@ -8,6 +9,10 @@ SGPController::SGPController() : TaskClass("SGP Thread", 1000, 1000)
 }
 
 // void SGPController::setPin(int pin)
+void SGPController::setHumidity(int humidity)
+{
+    _sgpSensor.setHumidity(humidity);
+}
 
 int SGPController::getCO2()
 {
@@ -30,7 +35,10 @@ void SGPController::_setTVOC(int tvoc)
 }
 
 void SGPController::readSensorTask()
-{
+{ 
+    #ifdef GLOBAL_HUMIDITY
+      this->setHumidity(GLOBAL_HUMIDITY);
+    #endif
     _sgpSensor.measureAirQuality();
     _setCO2(_sgpSensor.CO2);
     _setTVOC(_sgpSensor.TVOC);

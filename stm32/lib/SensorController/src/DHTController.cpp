@@ -1,5 +1,6 @@
 #include <DHTController.h>
 #include "DHT.h"
+#include <GlobalSensorValue.h>
 
 DHTController::DHTController() : TaskClass("DHT Thread", 1000, 1000)
 {
@@ -19,16 +20,20 @@ void DHTController::_setTemperature(int temperature)
 void DHTController::_setHumidity(int humidity)
 {
   _humidity = humidity;
+  #if GLOBAL_HUMIDITY != 0
+      GLOBAL_HUMIDITY = humidity;
+  #endif
+  
 }
 
 int DHTController::getTemperature()
 {
-  return _dht.getTemperature();
+  return _temperature;
 }
 
 int DHTController::getHumidity()
 {
-  return _dht.getHumidity();
+  return _humidity;
 }
 
 void DHTController::readSensorTask()
