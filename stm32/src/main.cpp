@@ -15,12 +15,14 @@ DHT dht;
 
 // #define GAS_PIN = 
 #define BUZZER_PIN PA0
+#define LED_PIN PB5
 SoftwareSerial chat(ESP_RX,ESP_TX); // RX, TX to NodeMCU
 int i;
 BuzzerController buzzer(BUZZER_PIN);
 // define tasks
 // if buzzerOn is true, the buzzer will buzz
 bool buzzerOn = false;
+bool ledOn = false;
 int a = 13;
 int b = 25;
 
