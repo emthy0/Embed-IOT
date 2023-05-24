@@ -21,8 +21,10 @@ int i;
 BuzzerController buzzer(BUZZER_PIN);
 // define tasks
 // if buzzerOn is true, the buzzer will buzz
+void ledThread(void *pvParameters);
+
 bool buzzerOn = false;
-bool ledOn = false;
+bool ledOn = true;
 int a = 13;
 int b = 25;
 
@@ -50,6 +52,7 @@ void setup()
 
   // setup task
   buzzer.activate();
+  xTaskCreate(ledThread, "ledThread", 128, NULL, 1, NULL);
   vTaskStartScheduler();
   
 }
@@ -113,3 +116,19 @@ void loop()
   delay(1000);
 }
 
+// task
+void ledThread(void * pvParameters){
+
+  (void) pvParameters;
+  pinMode(LED_PIN, OUTPUT);
+
+  while(true){
+    if (ledOn){
+      digitalWrite(LED_PIN, HIGH);
+    }
+    else{
+      digitalWrite(LED_PIN, LOW);
+    }
+    vTaskDelay(10);
+  }
+}
