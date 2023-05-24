@@ -9,6 +9,10 @@
 SGP30 mySensor; //create an object of the SGP30 class
 DHT dht;
 
+// Declare your LDR sensor out pin connected Arduino pin “D2”
+int SensorPin = PC1;     
+int value;   
+
 #define ESP_RX PA1
 #define ESP_TX PA4
 #define DHT_PIN PA0_ALT1
@@ -50,11 +54,30 @@ void setup()
   buzzer.activate();
   vTaskStartScheduler();
   
+  pinMode(SensorPin,INPUT);
 }
 
 int counter = 0;
 void loop()
 {
+  value = analogRead(SensorPin);  
+ 
+  Serial.print("Analog reading = ");
+  Serial.print(value);     
+  
+  if (value < 50) {
+    Serial.println(" - Very bright");
+  } else if (value < 200) {
+    Serial.println(" - Bright");
+  } else if (value < 500) {
+    Serial.println(" - Light");
+  } else if (value < 800) {
+    Serial.println(" - Dim");
+  } else {
+    Serial.println(" - Dark");
+  }
+  delay(1000);
+   //Print the sensor value on your serial monitor window
   //delay(dht.getMinimumSamplingPeriod());
 
   //float humidity = dht.getHumidity(); // ดึงค่าความชื้น
