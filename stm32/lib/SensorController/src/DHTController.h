@@ -16,7 +16,7 @@ class DHTController
     int _temperature;
     int _humidity;
     xTaskHandle _thread;
-    void setTemperatue(int temperature);
+    void setTemperature(int temperature);
     void setHumidity(int humidity);
     void readSensorThread(void *pvParameters);
 };

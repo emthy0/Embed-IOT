@@ -6,7 +6,9 @@
 #include <SoftwareSerial.h>
 #include <BuzzerController.h>
 #include <CurtainController.h>
-#include <SensorController.h>
+#include <DHTController.h>
+
+
 SGP30 mySensor; //create an object of the SGP30 class
 DHT dht;
 
@@ -25,7 +27,7 @@ bool buzzerOn = false;
 int a = 13;
 int b = 25;
 
-SensorController sensorCon;
+DHTController sensorCon;
 
 
 void setup()

@@ -7,16 +7,23 @@ void DHTController::readSensorThread(void *pvParameters)
 
 DHTController::DHTController()
 {
-  xTaskCreate(&DHT::readSensorThread, "DHT Thread", 1000, (void *)&this, 1, &_thread);
+  //  if (_thread.joinable())
+  // {
+  //   _thread.join();
+  // }
+  // else {
+    
+  // }
+  xTaskCreate(&DHTController::readSensorThread, "DHT Thread", 1000, (void *)this, 1, &_thread);
 }
 
-DHTController::~DHTController(int pin)
-{
-  if (_thread.joinable())
-  {
-    _thread.join();
-  }
-}
+// DHTController::~DHTController()
+// {
+//   if (_thread.joinable())
+//   {
+//     _thread.join();
+//   }
+// }
 
 void DHTController::setPin(int pin)
 {
