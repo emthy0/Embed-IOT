@@ -126,13 +126,20 @@ void servoThread(void * pvParameters){
       vTaskDelay(15);
       continue;
     }
-    for (servoPos = 0; servoPos <= 180; servoPos += 1) { 
-        myServo.write(servoPos);             
-        vTaskDelay(15);                       
+    // for (servoPos = 0; servoPos <= 360; servoPos += 1) { 
+    //     myServo.write(servoPos);             
+    //     vTaskDelay(15);                       
+    // }
+    // for (servoPos = 180; servoPos >= 0; servoPos -= 1) { 
+    //     myServo.write(servoPos);             
+    //     vTaskDelay(15);                       
+    // }
+    if (servoPos >= 360){
+      servoPos = 0;
     }
-    for (servoPos = 180; servoPos >= 0; servoPos -= 1) { 
-        myServo.write(servoPos);             
-        vTaskDelay(15);                       
-    }
+    myServo.write(servoPos);
+    servoPos += 1;
+    vTaskDelay(15);
+
   }
 }
