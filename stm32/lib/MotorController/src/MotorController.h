@@ -32,6 +32,6 @@ private:
     void _stop();
     MotorMode _mode;
     void motorTask() override;
-}
+};
 
 #endif
