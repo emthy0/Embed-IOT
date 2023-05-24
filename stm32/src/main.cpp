@@ -15,12 +15,18 @@ DHT dht;
 
 // #define GAS_PIN = 
 #define BUZZER_PIN PA0
+#define MOTOR_PIN_IN1 PA4
+#define MOTOR_PIN_IN2 PB0
+#define MOTOR_PWM PB3
 SoftwareSerial chat(ESP_RX,ESP_TX); // RX, TX to NodeMCU
 int i;
 BuzzerController buzzer(BUZZER_PIN);
 // define tasks
+void motorThread(void *pvParameters);
 // if buzzerOn is true, the buzzer will buzz
 bool buzzerOn = false;
+int motorMode = -1; // 0 means stop, -1 means backward, 1 means forward
+int motorPower = 40; // 40 possibly means slowest, 100 means fastest
 int a = 13;
 int b = 25;
 
@@ -48,6 +54,7 @@ void setup()
 
   // setup task
   buzzer.activate();
+  xTaskCreate(motorThread, "motorThread", 128, NULL, 1, NULL);
   vTaskStartScheduler();
   
 }
@@ -111,3 +118,30 @@ void loop()
   delay(1000);
 }
 
+void motorThread(void * pvParameters){
+
+  // setup
+  (void) pvParameters;
+  pinMode(MOTOR_PIN_IN1, OUTPUT);
+  pinMode(MOTOR_PIN_IN2, OUTPUT);
+  pinMode(MOTOR_PWM, OUTPUT);
+
+  // loop
+  while(true){
+    if(motorMode == 0){
+      vTaskDelay(15);
+      continue;
+    }
+    else if(motorMode == 1){
+      digitalWrite(MOTOR_PIN_IN1, HIGH);
+      digitalWrite(MOTOR_PIN_IN2, LOW);
+      analogWrite(MOTOR_PWM, (motorPower*255/100));
+      vTaskDelay(15);
+    }else{
+      digitalWrite(MOTOR_PIN_IN1, LOW);
+      digitalWrite(MOTOR_PIN_IN2, HIGH);
+      analogWrite(MOTOR_PWM, (motorPower*255/100));
+      vTaskDelay(15);
+    }
+  }
+}
