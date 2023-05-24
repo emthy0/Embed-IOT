@@ -1,31 +1,40 @@
 #define BLYNK_PRINT Serial
-
+#define NO_GLOBAL_BLYNK true
+#include <BlynkSimpleEsp8266.h>
+#include <BlynkConfig.h>
+#include <BlynkAdapter.h>
 #include <Arduino.h>
 #include <SoftwareSerial.h>
 #include <ESP8266WiFi.h>
-#include <BlynkSimpleEsp8266_SSL.h>
+#include <BlynkConnector.h>
 #include <CurtainController.h>
-#define BLYNK_TEMPLATE_ID "TMPL6rXyIyR1E"
-#define BLYNK_TEMPLATE_NAME "SMARTCURTAIN"
-#define BLYNK_AUTH_TOKEN "drFzungMkQBmEgqMe5r8Q8_wVuwsa_4Q"
-#define SSID "IOT8D"
-#define PASS "iot888=D"
+
 
 #define STM_RX D5
 #define STM_TX D4
+
+#define CURTAIN_RX D6
+#define CURTAIN_TX D7
+
 
 SoftwareSerial chat(STM_RX, STM_TX); // RX, TX
 
 String a;
 
+
+
 void setup()
 {
 
-  Serial.begin(9600);
+  Serial.begin(38400);
 
-  chat.begin(4800);
+  Serial.printf("\n\n\n\nInitializing NodeMCU\n\n");
+  const char* blynkCred[5] = {BLYNK_TEMPLATE_ID, BLYNK_TEMPLATE_NAME, BLYNK_AUTH_TOKEN, BLYNK_SSID, BLYNK_PASS};
+  BlynkConnector blynk(blynkCred, CurtainController());
+  // BlynkConnector blynk(blynkCred, CurtainController(CURTAIN_RX, CURTAIN_TX, 9600));
+  // chat.begin(4800);
 
-  Blynk.begin(BLYNK_AUTH_TOKEN, SSID, PASS);
+  // Blynk.begin(BLYNK_AUTH_TOKEN, SSID, PASS);
 
   delay(10);
 }
