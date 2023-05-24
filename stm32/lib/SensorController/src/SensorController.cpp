@@ -26,27 +26,27 @@ void SensorController::setLDRpin(int pin)
 }
 
 
-void SensorController::getTemperature()
+float SensorController::getTemperature()
 {
     return DHTController::getTemperature();
 }
 
-void SensorController::getHumidity()
+float SensorController::getHumidity()
 {
     return DHTController::getHumidity();
 }
 
-void SensorController::getCO()
+int SensorController::getCO()
 {
     return MQController::getCO();
 }
 
-void SensorController::getLPG()
+int SensorController::getLPG()
 {
     return MQController::getLPG();
 }
 
-void SensorController::getSmoke()
+int SensorController::getSmoke()
 {
     return MQController::getSmoke();
 }

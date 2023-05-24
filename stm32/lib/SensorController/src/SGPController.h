@@ -1,7 +1,7 @@
 #ifndef SGPCONTROLLER_H
 #define SGPCONTROLLER_H
 
-#include "SparkFun_SGP30_Arduino_Library.h" 
+#include <SparkFun_SGP30_Arduino_Library.h>
 #include <STM32FreeRTOS.h>
 #include <Taskbase.h>
 #include <Wire.h>
@@ -21,4 +21,5 @@ private:
     void _setCO2(int co2);
     void _setTVOC(int tvoc);
     void readSensorTask() override;
-}
+};
+#endif

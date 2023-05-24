@@ -1,4 +1,4 @@
-#include <SGPController.hpp>
+#include <SGPController.h>
 
 SGPController::SGPController() : TaskClass("SGP Thread", 1000, 1000)
 {

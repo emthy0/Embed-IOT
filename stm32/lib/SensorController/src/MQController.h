@@ -29,12 +29,10 @@ private:
   float _COCurve[3] = {2.3, 0.72, -0.34};
   float _SmokeCurve[3] = {2.3, 0.53, -0.44};
   float           _Ro           =  10;
-
+  float           _RL_VALUE     =  5;
   float _MQResistanceCalculation(int raw_adc);
   float _MQCalibration(int mq_pin);
-  float _MQRead(int mq_pin);
-
-      void readSensorTask() override;
-}
+  float _MQRead();
+};
 
 #endif

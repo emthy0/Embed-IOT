@@ -42,6 +42,6 @@ private:
   void _readMQ();
   void _readSGP();
   void _readLDR();
-}
+};
 
 #endif

@@ -39,9 +39,9 @@ int MQController::getSmoke()
     return _smoke;
 }
 
-float MQResistanceCalculation(int raw_adc)
+float MQController::_MQResistanceCalculation(int raw_adc)
 {
-  return ( ((float)RL_VALUE*(1023-raw_adc)/raw_adc));
+  return ( ((float)_RL_VALUE*(1023-raw_adc)/raw_adc));
 }
 
 int  MQGetPercentage(float rs_ro_ratio, float *pcurve)
@@ -50,12 +50,12 @@ int  MQGetPercentage(float rs_ro_ratio, float *pcurve)
 }
 
 
-int MQController::_MQRead()
+float MQController::_MQRead()
 {
     int i;
     float rs = 0;
     for (i=0;i<_READ_SAMPLE_TIMES;i++) {
-        rs += MQResistanceCalculation(analogRead(_pin));
+        rs += this->_MQResistanceCalculation(analogRead(_pin));
         delay(_READ_SAMPLE_TIMES);
     }
 
