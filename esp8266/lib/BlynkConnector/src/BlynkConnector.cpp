@@ -6,7 +6,7 @@
 #include "CurtainController.h"
 // #include "CurtainController.*"
 
-BlynkConnector::BlynkConnector(const char* blynkCred[5], CurtainController acurtainController)
+BlynkConnector::BlynkConnector(const char* blynkCred[5], CurtainController& acurtainController)
 {
   _curtainController = acurtainController;
   Blynk.begin(blynkCred[2], blynkCred[3], blynkCred[4]);

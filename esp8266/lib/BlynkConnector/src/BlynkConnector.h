@@ -9,7 +9,7 @@
 class BlynkConnector
 {
   public:
-    BlynkConnector(const char* blynkCred[5], CurtainController curtainController);
+    BlynkConnector(const char* blynkCred[5], CurtainController& curtainController);
     void SendHumidity(double Humidity);
     void SendTemperature(double Temp);
   private:
