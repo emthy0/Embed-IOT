@@ -12,18 +12,18 @@
 #include <PinConfig.h>
 #include <SlaveChatController.h>
 
-SoftwareSerial SlaveChatController::chat(ESP_RX,ESP_TX); // RX, TX to NodeMCU
+SoftwareSerial chat(ESP_RX,ESP_TX); // RX, TX to NodeMCU
 BuzzerController buzzer(BUZZER_PIN);
 SensorController sensorController;
 LEDController led(LED_PIN);
 MotorController motor(MOTOR_PIN_IN1, MOTOR_PIN_IN2, MOTOR_PWM);
 // SlaveChatController::chat = SoftwareSerial(ESP_RX, ESP_TX)
-SlaveChatController slaveChatController(ESP_RX, ESP_TX, ESP_BAUDRATE);
+// SlaveChatController slaveChatController(ESP_RX, ESP_TX, ESP_BAUDRATE);
 
 
 void setup()
 {
-  // SlaveChatController::chat.begin(4800);
+  chat.begin(ESP_BAUDRATE);
   Serial.begin(9600);
   
   sensorController.setDHTpin(DHT_PIN);
@@ -34,9 +34,27 @@ void setup()
 }
 
 int counter = 0;
+String rawFullcommand;
+const char *delimiter = " ";
+char* substring;
+char* substrings[4]; 
+int i;
 void loop()
 {
   // put your main code here, to run repeatedly:
   // Serial.println("Hello World");
   // Serial.printf
+    rawFullcommand = chat.readStringUntil('\n');
+    i = 0;
+    char fullCommand[rawFullcommand.length() + 1];
+    strcpy(fullCommand, rawFullcommand.c_str());
+    substring = strtok(fullCommand, delimiter);
+    while (substring != NULL && i < 4) 
+    {
+        substrings[i] = substring;
+        substring = strtok(NULL, delimiter);
+        i++;
+    }
+
+    Serial.println(substrings[0]);
 }
