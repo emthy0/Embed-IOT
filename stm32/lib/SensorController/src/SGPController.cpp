@@ -3,15 +3,16 @@
 
 SGPController::SGPController() : TaskClass("SGP Thread", 1000, 1000)
 {
-    _sgpSensor.begin();
-    _sgpSensor.initAirQuality();
-    _sgpSensor.setHumidity(50);
+  Wire.begin();
+  _sgpSensor.begin();
+  _sgpSensor.initAirQuality();
+  _sgpSensor.setHumidity(50);
 }
 
 // void SGPController::setPin(int pin)
 void SGPController::setHumidity(int humidity)
 {
-    _sgpSensor.setHumidity(humidity);
+  _sgpSensor.setHumidity(humidity);
 }
 
 int SGPController::getCO2()
@@ -35,12 +36,12 @@ void SGPController::_setTVOC(int tvoc)
 }
 
 void SGPController::readSensorTask()
-{ 
-    #ifdef GLOBAL_HUMIDITY
-      this->setHumidity(GLOBAL_HUMIDITY);
-    #endif
-    _sgpSensor.measureAirQuality();
-    _setCO2(_sgpSensor.CO2);
-    _setTVOC(_sgpSensor.TVOC);
-    vTaskDelay(1000);
+{
+#ifdef GLOBAL_HUMIDITY
+  this->setHumidity(GLOBAL_HUMIDITY);
+#endif
+  _sgpSensor.measureAirQuality();
+  _setCO2(_sgpSensor.CO2);
+  _setTVOC(_sgpSensor.TVOC);
+  vTaskDelay(1000);
 }

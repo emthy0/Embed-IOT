@@ -3,9 +3,11 @@
 
 #include <DHTController.h>
 #include <MQController.h>
+#include <SGPController.h>
+#include <LDRController.h>
 
 
-class SensorController : protected DHTController, protected MQController
+class SensorController : protected DHTController, protected MQController, protected SGPController, protected LDRController
 {
 public:
   SensorController();
