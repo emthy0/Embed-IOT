@@ -22,10 +22,10 @@ public:
   {
     xTaskCreate(&taskfun, (const char *)name, stackDepth, this, priority, &handle);
   }
-  virtual void motorTask() = 0;
+  virtual void classTask() = 0;
   static void taskfun(void *parm)
   {
-    static_cast<TaskClass *>(parm)->readSensorTask();
+    static_cast<TaskClass *>(parm)->classTask();
     // #if INCLUDE_vTaskDelete
     //     vTaskDelete(handle);
     // #else

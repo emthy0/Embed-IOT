@@ -22,7 +22,7 @@ private:
   void _setCO(int co);
   void _setLPG(int lpg);
   void _setSmoke(int smoke);
-  void readSensorTask() override;
+  void classTask();
 
   int _READ_SAMPLE_TIMES = 5;
   float _LPGCurve[3] = {2.3, 0.21, -0.47};

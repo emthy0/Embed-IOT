@@ -32,7 +32,7 @@ private:
     int _pin;
     BRIGHTNESSS _brightness;
     void _setBrightness(BRIGHTNESSS   brightness);
-    void readSensorTask() override;
+    void classTask();
 };
 
 

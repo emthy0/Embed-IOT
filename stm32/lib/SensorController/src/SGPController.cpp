@@ -35,7 +35,7 @@ void SGPController::_setTVOC(int tvoc)
   _tvoc = tvoc;
 }
 
-void SGPController::readSensorTask()
+void SGPController::classTask()
 {
 #ifdef GLOBAL_HUMIDITY
   this->setHumidity(GLOBAL_HUMIDITY);

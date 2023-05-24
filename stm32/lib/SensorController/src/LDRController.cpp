@@ -21,7 +21,7 @@ BRIGHTNESSS LDRController::getBrightness()
     return  _brightness;
 }
 
-void LDRController::readSensorTask() {
+void LDRController::classTask() {
     if (_pin == -1 ) {
         return;
     }

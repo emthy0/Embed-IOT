@@ -1,6 +1,7 @@
 #ifndef LEDCONTROLLER_H
 #define LEDCONTROLLER_H
 
+#include<TaskBase.h>
 #include <Arduino.h>
 
 enum LEDMode
@@ -12,7 +13,7 @@ enum LEDMode
 
 void ledThread(void *pvParameters);
 
-class LEDController : private TaskBase
+class LEDController : protected TaskClass
 {
 public:
     LEDController(int pin);
@@ -22,5 +23,7 @@ public:
 private:
     LEDMode _mode;
     int _pin;
-    void ledTask() override;
+    void classTask();
 };
+
+#endif

@@ -1,7 +1,8 @@
 #include <MotorController.h>
 #include <Arduino.h>
-
-MotorController::MotorController(int in1, int in2, int pwm)
+#include <STM32FreeRTOS.h>
+#include <TaskBase.h>
+MotorController::MotorController(int in1, int in2, int pwm): TaskClass("motor Thread", 1000, 1000)
 {
     _pinIn1 = in1;
     _pinIn2 = in2;
@@ -11,58 +12,61 @@ MotorController::MotorController(int in1, int in2, int pwm)
     pinMode(_pinPWM, OUTPUT);
     setMode(STOP); // set default mode to STOP (0
     setPower(0);   // set default power to 0
-    this->active = false;
+    this->_active = false;
 }
 
 void MotorController::setMode(MotorMode mode)
 {
-    this->mode = mode;
+    this->_mode = mode;
 }
 
 void MotorController::setPower(int power)
 {
-    this->power = power;
+    this->_power = power;
 }
 
-void MotorController::activate(int duration)
+void MotorController::activate(MotorMode mode, int duration)
 {
-    // xTaskCreate(buzzerThread, "motor Thread", 128, (void *)&duration, 1, NULL);
+    
     this->_duration = duration;
-    TaskClass("motor Thread", 1000, 1000);
+    this->_mode = mode;
+    // xTaskCreate(motorThread, "motor Thread", 128, NULL, 1, NULL);
+    
+    // TaskClass("motor Thread", 1000, 1000);
 }
 
 int MotorController::getMode()
 {
-    return this->mode;
+    return this->_mode;
 }
 
 int MotorController::getPower()
 {
-    return this->power;
+    return this->_power;
 }
 
 bool MotorController::isActive()
 {
-    return this->active;
+    return this->_active;
 }
 
 void MotorController::_stop()
 {
-    this->mode = STOP;
-    this->power = 0;
-    this->active = false;
+    this->_mode = STOP;
+    this->_power = 0;
+    this->_active = false;
             digitalWrite(_pinIn1, LOW);
         digitalWrite(_pinIn2, LOW);
         analogWrite(_pinPWM, 0);
 }
 
-void MotorController::motorTask()
+void MotorController::classTask()
 {
     this->_active = true;
-    if (_duration == 0 || _mode == STOP)
+    if (_mode == STOP)
     {
         this->_stop();
-        continue;
+        return;
     }
     else if (_mode == 1)
     {

@@ -1,12 +1,12 @@
 #include <LEDController.h>
 #include <Arduino.h>
+#include <TaskBase.h>
 
-LEDController::LEDController(int pin) : TaskBase("LED Thread", 1000, 1000)
+LEDController::LEDController(int pin) : TaskClass("LED Thread", 1000, 1000)
 {
     _pin = pin;
     pinMode(_pin, OUTPUT);
-    setMode(OFF); // set default mode to OFF (0
-    this->active = false;
+    this->_mode = OFF;
 }
 
 void LEDController::activate()
@@ -20,11 +20,11 @@ void LEDController::deactivate()
     this->_mode = OFF;
 }
 
-void LEDController::ledTask()
+void LEDController::classTask()
 {
     while (true)
     {
-        if (this->_ == ON)
+        if (this->_mode == ON)
         {
             digitalWrite(_pin, HIGH);
         }

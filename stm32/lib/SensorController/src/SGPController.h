@@ -22,6 +22,6 @@ private:
     int _tvoc = -1;
     void _setCO2(int co2);
     void _setTVOC(int tvoc);
-    void readSensorTask() override;
+    void classTask();
 };
 #endif

@@ -2,6 +2,7 @@
 #define MOTORCONTROLLER_H
 
 #include <Arduino.h>
+#include <TaskBase.h>
 
 enum MotorMode
 {
@@ -10,15 +11,15 @@ enum MotorMode
     BACKWARD = -1
 };
 
-void motorThread(void *pvParameters);
 
-class MotorController : private TaskBase
+
+class MotorController :  TaskClass
 {
 public:
     MotorController(int in1, int in2, int pwm);
     void setMode(MotorMode mode);
     void setPower(int power);
-    void activate(int duration);
+    void activate(MotorMode mode, int duration);
     int getMode();
     int getPower();
     bool isActive();
@@ -31,7 +32,9 @@ private:
     bool _active;
     void _stop();
     MotorMode _mode;
-    void motorTask() override;
+    // void motorThread(void *pvParameters);
+    void classTask() override;
+    // void motorTask()
 };
 
 #endif

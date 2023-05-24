@@ -65,7 +65,7 @@ float MQController::_MQRead()
 }
 
 
-void MQController::readSensorTask()
+void MQController::classTask()
 {
     if (_pin == -1)
     {

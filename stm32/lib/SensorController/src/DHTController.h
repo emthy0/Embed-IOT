@@ -19,7 +19,7 @@ private:
   int _humidity = -1;
   void _setTemperature(int temperature);
   void _setHumidity(int humidity);
-  void readSensorTask() override;
+  void classTask();
 };
 
 #endif

@@ -36,7 +36,7 @@ int DHTController::getHumidity()
   return _humidity;
 }
 
-void DHTController::readSensorTask()
+void DHTController::classTask()
 {
   if (_pin == -1)
   {
