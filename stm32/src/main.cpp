@@ -114,9 +114,9 @@ void loopThread(void *pvParameters)
     // fullCommand = strtok(buffer, "\n");
     for(int i = 0; i < 4; i++){
       rawController[i] = buffer[i];
-      action[i] = buffer[i+4];
-      args1[i] = buffer[i+8];
-      args2[i] = buffer[i+12];
+      action[i] = buffer[i+5];
+      args1[i] = buffer[i+10];
+      args2[i] = buffer[i+15];
     }
     //String(buffer).toCharArray(rawController,4,0);
     //String(buffer).toCharArray(action,4,5);
