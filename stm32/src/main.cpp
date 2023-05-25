@@ -112,10 +112,16 @@ void loopThread(void *pvParameters)
     // chat.readBytesUntil('\n',buffer,20);
     chat.readBytes(buffer, 20);
     // fullCommand = strtok(buffer, "\n");
-    String(buffer).toCharArray(rawController,4,0);
-    String(buffer).toCharArray(action,4,5);
-    String(buffer).toCharArray(args1,4,10);
-    String(buffer).toCharArray(args2,4,15);
+    for(int i = 0; i < 4; i++){
+      rawController[i] = buffer[i];
+      action[i] = buffer[i+4];
+      args1[i] = buffer[i+8];
+      args2[i] = buffer[i+12];
+    }
+    //String(buffer).toCharArray(rawController,4,0);
+    //String(buffer).toCharArray(action,4,5);
+    //String(buffer).toCharArray(args1,4,10);
+    //String(buffer).toCharArray(args2,4,15);
     Serial.printf("Controller: %s | Command: %s | args %s %s\n", rawController, action, args1, args2);
     Controllers controller = getController(rawController);
     if (controller != UNKNOWN)
