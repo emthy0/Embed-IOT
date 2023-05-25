@@ -107,5 +107,15 @@ void loop()
   {
     sendChat(LED, "deat", "0000", "0000");
   }
+
+  if (brightness < 3)
+  {
+    sendChat(BUZZER, "acti", "0000", "0000");
+  }
+  else
+  {
+    sendChat(BUZZER, "deat", "0000", "0000");
+  }
+
   delay(1000);
 }
