@@ -14,9 +14,13 @@ class BlynkConnector
 {
   public:
 
-    BlynkConnector(const char* blynkCred[5], CurtainController& curtainController);
+    BlynkConnector(CurtainController& curtainController);
     void SendHumidity(double Humidity);
     void SendTemperature(double Temp);
+    void SendCO2(double CO2);
+    void SendTVOC(double TVOC);
+    void SendBrightness(int Brightness);
+    void SetupBlynk(const char* blynkCred[5]);
     // int GetCurtainLevel();
     // int GetCurtaionMode();
   private:

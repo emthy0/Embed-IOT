@@ -6,15 +6,26 @@
 #include "CurtainController.h"
 // #include "CurtainController.*"
 
-BlynkConnector::BlynkConnector(const char* blynkCred[5], CurtainController& acurtainController)
+BlynkConnector::BlynkConnector(CurtainController& acurtainController)
 {
   _curtainController = acurtainController;
-  Serial.println("BlynkConnector::BlynkConnector");
+  // Serial.println("BlynkConnector::BlynkConnector");
+  // Serial.println(blynkCred[2]);
+  // Serial.println(blynkCred[3]);
+  // Serial.println(blynkCred[4]);
+  // Blynk.begin(blynkCred[2], blynkCred[3], blynkCred[4]);
+  // Serial.println("after BlynkConnector::BlynkConnector");
+  // Serial.println(Blynk.connected());
+}
+
+void BlynkConnector::SetupBlynk(const char* blynkCred[5])
+{
+  Serial.println("BlynkConnector::SetupBlynk");
   Serial.println(blynkCred[2]);
   Serial.println(blynkCred[3]);
   Serial.println(blynkCred[4]);
   Blynk.begin(blynkCred[2], blynkCred[3], blynkCred[4]);
-  Serial.println("after BlynkConnector::BlynkConnector");
+  Serial.println("after BlynkConnector::SetupBlynk");
   Serial.println(Blynk.connected());
 }
 
@@ -26,6 +37,21 @@ void BlynkConnector::SendHumidity(double Humidity)
 void BlynkConnector::SendTemperature(double Temperature)
 {
   Blynk.virtualWrite(V12, Temperature);
+}
+
+void BlynkConnector::SendCO2(double CO2)
+{
+  Blynk.virtualWrite(V13, CO2);
+}
+
+void BlynkConnector::SendTVOC(double TVOC)
+{
+  Blynk.virtualWrite(V14, TVOC);
+}
+
+void BlynkConnector::SendBrightness(int Brightness)
+{
+  Blynk.virtualWrite(V15, Brightness);
 }
 
 // int BlynkConnector::GetCurtainLevel()

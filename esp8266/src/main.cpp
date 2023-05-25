@@ -18,8 +18,11 @@
 SoftwareSerial chat(D5, D4); // RX, TX
 String a;
 
+const char *blynkCred[5] = {BLYNK_TEMPLATE_ID, BLYNK_TEMPLATE_NAME, BLYNK_AUTH_TOKEN, BLYNK_SSID, BLYNK_PASS};
+
 // SoftwareSerial MasterCurtainController::chat (const chat&);
 MasterCurtainController curtainCC(chat);
+BlynkConnector blynk(curtainCC);
 
 enum Controllers
 {
@@ -60,10 +63,9 @@ void setup()
 {
   chat.begin(9600);
   Serial.begin(38400);
-
+  blynk.SetupBlynk(blynkCred);
   Serial.printf("\n\n\n\nInitializing NodeMCU\n\n");
-  const char *blynkCred[5] = {BLYNK_TEMPLATE_ID, BLYNK_TEMPLATE_NAME, BLYNK_AUTH_TOKEN, BLYNK_SSID, BLYNK_PASS};
-  // BlynkConnector blynk(blynkCred, curtainCC);
+
   Serial.printf("\n\n\n\nInitialized NodeMCU\n\n");
 }
 int mode = 0;
@@ -92,7 +94,7 @@ void loop()
   //   curtainCC.setLevel(50);
   // }
   // curtainCC.setLevel(50);
-
+  blynk.SendHumidity(10);
   if (brightness < 2)
   {
     sendChat(LED, "acti", "0000", "0000");
