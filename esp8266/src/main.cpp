@@ -94,7 +94,11 @@ void loop()
   //   curtainCC.setLevel(50);
   // }
   // curtainCC.setLevel(50);
+  blynk.SendCO2(co2);
+  blynk.SendTVOC(tvoc);
+  blynk.SendTemperature(temp);
   blynk.SendHumidity(10);
+  blynk.SendBrightness(brightness);
   if (brightness < 2)
   {
     sendChat(LED, "acti", "0000", "0000");
