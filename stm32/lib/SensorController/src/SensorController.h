@@ -15,6 +15,7 @@ public:
   void setMQpin(int pin);
   void setLDRpin(int pin);
 
+  BRIGHTNESSS getBrightness();
   int getCO2();
   int getTVOC();
   float getTemperature();

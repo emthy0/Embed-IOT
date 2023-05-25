@@ -9,6 +9,22 @@ LEDController::LEDController(int pin) : TaskClass("LED Thread", 1000, 1000)
     this->_mode = OFF;
 }
 
+void LEDController::execute(char* command[3])
+{
+    if (command[0] == "activate")
+    {
+        this->activate();
+    }
+    else if (command[0] == "deactivate")
+    {
+        this->deactivate();
+    }
+    else
+    {
+        // do nothing
+    }
+}
+
 void LEDController::activate()
 {
     this->_mode = ON;

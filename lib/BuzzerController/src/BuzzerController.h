@@ -14,6 +14,7 @@ class BuzzerController
     void deactivate();
     bool getState();
     int getControllerMode();
+    void execute( char* command[3]);
   private:
     int _pin;
     bool _currentState;

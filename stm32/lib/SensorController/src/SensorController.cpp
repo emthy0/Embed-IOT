@@ -21,6 +21,11 @@ void SensorController::setLDRpin(int pin)
     LDRController::setPin(pin);
 }
 
+BRIGHTNESSS SensorController::getBrightness()
+{
+    return LDRController::getBrightness();
+}
+
 int SensorController::getCO2()
 {
     return SGPController::getCO2();

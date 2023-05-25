@@ -6,9 +6,14 @@
 // #include <BlynkCredential.h>
 #include <CurtainController.h>
 
+/**
+ * @brief 
+ * 
+ */
 class BlynkConnector
 {
   public:
+
     BlynkConnector(const char* blynkCred[5], CurtainController& curtainController);
     void SendHumidity(double Humidity);
     void SendTemperature(double Temp);

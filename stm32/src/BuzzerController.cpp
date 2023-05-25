@@ -35,6 +35,22 @@ BuzzerController::BuzzerController(int pin)
   xTaskCreate(buzzerThread, "buzzerThread", 128, (void *)&_pin, 1, NULL);
 }
 
+void BuzzerController::execute(char* command[3])
+{
+  if (command[0] == "activate")
+  {
+    this->activate();
+  }
+  else if (command[0] == "deactivate")
+  {
+    this->deactivate();
+  }
+  else
+  {
+    // do nothing
+  }
+}
+
 void BuzzerController::activate()
 {
   _currentState = true;

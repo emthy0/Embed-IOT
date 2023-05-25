@@ -1,10 +1,11 @@
 #include "Arduino.h"
 #include <SoftwareSerial.h>
-#include "CurtainController.h"
+#include "MasterCurtainController.h"
 
 
 CurtainController::CurtainController()
-{ 
+{
+  // _chat = chat;
 }
 
 

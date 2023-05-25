@@ -7,7 +7,7 @@
 #include <SoftwareSerial.h>
 #include <ESP8266WiFi.h>
 #include <BlynkConnector.h>
-#include <CurtainController.h>
+#include <MasterCurtainController.h>
 
 
 #define STM_RX D5
@@ -19,7 +19,10 @@
 
 SoftwareSerial chat(STM_RX, STM_TX); // RX, TX
 String a;
-CurtainController curtainCC;
+
+// SoftwareSerial MasterCurtainController::chat (const chat&);
+MasterCurtainController curtainCC(chat);
+
 
 
 void setup()
