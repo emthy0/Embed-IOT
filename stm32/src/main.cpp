@@ -21,6 +21,7 @@ SlaveCurtainController curtain(MOTOR_PIN_IN1, MOTOR_PIN_IN2, MOTOR_PWM);
 // MotorController motor(MOTOR_PIN_IN1, MOTOR_PIN_IN2, MOTOR_PWM);
 // SlaveChatController::chat = SoftwareSerial(ESP_RX, ESP_TX)
 // SlaveChatController slaveChatController(ESP_RX, ESP_TX, ESP_BAUDRATE);
+void loopThread(void *pvParameters);
 enum Controllers
 {
   UNKNOWN = -1,
@@ -38,6 +39,7 @@ void setup()
   sensor.setDHTpin(DHT_PIN);
   sensor.setMQpin(MQ_PIN);
   sensor.setLDRpin(LDR_PIN);
+  xTaskCreate(loopThread, "loopThread", 10000, NULL, 1, NULL);
   vTaskStartScheduler();
 }
 
@@ -69,8 +71,13 @@ Controllers getController(char *controller)
 }
 
 
-void loop()
+void loopThread(void *pvParameters)
 {
+  
+  (void) pvParameters;
+
+  while(true)
+  {
   // put your main code here, to run repeatedly:
   // Serial.println("Hello World");
   // Serial.printf
@@ -141,6 +148,7 @@ void loop()
     }
   default:
     break;
+  }
   }
 }
 
