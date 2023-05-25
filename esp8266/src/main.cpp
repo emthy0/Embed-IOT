@@ -15,7 +15,7 @@
 #define CURTAIN_RX D6
 #define CURTAIN_TX D7
 
-SoftwareSerial chat(STM_RX, STM_TX); // RX, TX
+SoftwareSerial chat(D5, D4); // RX, TX
 String a;
 
 // SoftwareSerial MasterCurtainController::chat (const chat&);
@@ -58,12 +58,12 @@ float co2, tvoc, temp, humid, co, lpg, smoke, fbrightness;
 int brightness;
 void setup()
 {
-
+  chat.begin(9600);
   Serial.begin(38400);
 
   Serial.printf("\n\n\n\nInitializing NodeMCU\n\n");
   const char *blynkCred[5] = {BLYNK_TEMPLATE_ID, BLYNK_TEMPLATE_NAME, BLYNK_AUTH_TOKEN, BLYNK_SSID, BLYNK_PASS};
-  BlynkConnector blynk(blynkCred, curtainCC);
+  // BlynkConnector blynk(blynkCred, curtainCC);
   Serial.printf("\n\n\n\nInitialized NodeMCU\n\n");
 }
 int mode = 0;
@@ -90,7 +90,7 @@ void loop()
   // } else {
   //   curtainCC.setLevel(50);
   // }
-  curtainCC.setLevel(50);
+  // curtainCC.setLevel(50);
 
   if (brightness < 2) {
     sendChat(LED, "activate", "0", "0");

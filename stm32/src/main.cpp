@@ -19,7 +19,7 @@
 
 // #define configASSERT( x ) if( x == 0 ) { taskDISABLE_INTERRUPTS(); for(;;); }
 
-SoftwareSerial chat(ESP_RX, ESP_TX); // RX, TX to NodeMCU
+SoftwareSerial chat(PA8, PA7_ALT1); // RX, TX to NodeMCU
 
 BuzzerController buzzer(BUZZER_PIN);
 // SensorController sensor(888);
@@ -50,10 +50,10 @@ void setup()
 
   //
   // xTaskCreate(printThread, "printThread", 100, NULL, 1, NULL);
-  Serial.begin(9600);
+  Serial.begin(115200);
   Serial.println("Hello World");
 
-  chat.begin(ESP_BAUDRATE);
+  chat.begin(9600);
   dht.setPin(DHT_PIN);
   mqc.setPin(MQ_PIN);
   ldrc.setPin(LDR_PIN);
@@ -61,7 +61,7 @@ void setup()
   // sensor.setMQpin(MQ_PIN);
   // sensor.setLDRpin(LDR_PIN);
   Serial.println("Hello World in setup");
-  xTaskCreate(loopThread, "loopThread", 10000, NULL, 1, NULL);
+  xTaskCreate(loopThread, "loopThread", 1010, NULL, 1, NULL);
   Serial.println("Hello World in setup2");
   vTaskStartScheduler();
   Serial.println("Hello World in setup3");
@@ -105,16 +105,18 @@ void loopThread(void *pvParameters)
     // Serial.println("Hello World");
     // Serial.printf
     Serial.println("Starting loop");
+    char buffer[100];
     String rawFullcommand;
     char *rawController;
     const char *delimiter = " ";
     char *substring;
     char *command[3];
-
-    if (chat.available())
+    chat.readBytesUntil('\n',buffer,100);
+    Serial.println(buffer);
+    if (rawFullcommand)
     {
       Serial.println("Chat is available!!!!!");
-      rawFullcommand = chat.readStringUntil('\n');
+
       Serial.println(rawFullcommand);
       i = 0;
       char fullCommand[rawFullcommand.length() + 1];
@@ -139,18 +141,19 @@ void loopThread(void *pvParameters)
       // char *command[3];
       // command = substrings [1:];
       Serial.printf("AtController: %s | Executing %s \n", rawController, command[0]);
-      switch (controller)
+      if (controller == BUZZER)
       {
-      case BUZZER:
         buzzer.execute(command);
-        break;
-      case CURTAIN:
+      }
+      else if (controller == CURTAIN)
+      {
         curtain.execute(command);
-        break;
-      case LED:
+      }
+      else if (controller == LED)
+      {
         led.execute(command);
-        break;
-      case SENSOR:
+      }
+      else if (controller == SENSOR)
       {
         float co2, tvoc, temp, humid, co, lpg, smoke, brightness;
         byte dataByts[sizeof(float) * 8];
@@ -170,14 +173,11 @@ void loopThread(void *pvParameters)
           memcpy(&dataByts[i * sizeof(float)], &data[i], sizeof(float));
         }
         chat.write(dataByts, sizeof(dataByts));
-        break;
-      }
-      default:
-        break;
       }
       vTaskDelay(1000);
     }
   }
+  Serial.println("Hello Hell in loopThread");
 }
 
 void loop()
@@ -186,7 +186,7 @@ void loop()
   // Serial.println("Hello World");
   // Serial.printf
   Serial.begin(9600);
-  Serial.println("Hello World eiei");
+  Serial.println("Should not be here");
 }
 
 // void printThread(void *pvParameters)
