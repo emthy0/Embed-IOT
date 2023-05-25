@@ -9,13 +9,11 @@
 #include <BlynkConnector.h>
 #include <MasterCurtainController.h>
 
-
 #define STM_RX D5
 #define STM_TX D4
 
 #define CURTAIN_RX D6
 #define CURTAIN_TX D7
-
 
 SoftwareSerial chat(STM_RX, STM_TX); // RX, TX
 String a;
@@ -23,56 +21,81 @@ String a;
 // SoftwareSerial MasterCurtainController::chat (const chat&);
 MasterCurtainController curtainCC(chat);
 
+enum Controllers
+{
+  UNKNOWN = -1,
+  BUZZER,
+  CURTAIN,
+  LED,
+  SENSOR
+};
 
+void sendChat(Controllers intcontroller, String command, String arg1 = "0", String arg2 = "0")
+{
+  String controller;
+  switch (intcontroller)
+  {
+  case BUZZER:
+    controller = "buzzer";
+    break;
+  case CURTAIN:
+    controller = "curtain";
+    break;
+  case LED:
+    controller = "led";
+    break;
+  case SENSOR:
+    controller = "sensor";
+    break;
+  default:
+    controller = "unknown";
+    break;
+  }
+  chat.printf("%s %s %s %s\n", controller.c_str(), command.c_str(), arg1.c_str(), arg2.c_str());
+}
 
+float co2, tvoc, temp, humid, co, lpg, smoke, fbrightness;
+int brightness;
 void setup()
 {
 
   Serial.begin(38400);
 
   Serial.printf("\n\n\n\nInitializing NodeMCU\n\n");
-  const char* blynkCred[5] = {BLYNK_TEMPLATE_ID, BLYNK_TEMPLATE_NAME, BLYNK_AUTH_TOKEN, BLYNK_SSID, BLYNK_PASS};
+  const char *blynkCred[5] = {BLYNK_TEMPLATE_ID, BLYNK_TEMPLATE_NAME, BLYNK_AUTH_TOKEN, BLYNK_SSID, BLYNK_PASS};
   BlynkConnector blynk(blynkCred, curtainCC);
+  Serial.printf("\n\n\n\nInitialized NodeMCU\n\n");
 }
 int mode = 0;
+int count = 0;
 void loop()
 {
+  Serial.printf("Looping %d\n", count);
+  count++;
+  byte dataBytes[sizeof(float) * 8];
+  sendChat(SENSOR, "0", "0", "0");
+  chat.readBytes(dataBytes, sizeof(float) * 8);
+  memcpy(&co2, dataBytes, sizeof(float));
+  memcpy(&tvoc, dataBytes + sizeof(float), sizeof(float));
+  memcpy(&temp, dataBytes + sizeof(float) * 2, sizeof(float));
+  memcpy(&humid, dataBytes + sizeof(float) * 3, sizeof(float));
+  memcpy(&co, dataBytes + sizeof(float) * 4, sizeof(float));
+  memcpy(&lpg, dataBytes + sizeof(float) * 5, sizeof(float));
+  memcpy(&smoke, dataBytes + sizeof(float) * 6, sizeof(float));
+  memcpy(&fbrightness, dataBytes + sizeof(float) * 7, sizeof(float));
+  brightness = (int)fbrightness;
+  Serial.printf("CO2: %f | TVOC: %f | Temperature: %f| Humidity: %f | CO: %f | LPG: %f | Smoke: %f | Brightness: %d \n", co2, tvoc, temp, humid, co, lpg, smoke, brightness);
+  // if (curtainMode == 1) {
+  //   // AUTO CURTAIN LEVEL CALCULATION HERE
+  // } else {
+  //   curtainCC.setLevel(50);
+  // }
+  curtainCC.setLevel(50);
 
-  Serial.println("Please wait Serial..");
-  if (mode == 0)
-  {
-    while (a == "")
-    {
-
-      chat.println("Q1"); // ส่งหัวข้อคำถาม ว่า Question1 ไปยัง Arduino
-
-      a = chat.readString(); // อ่าน Serial และนำไปเก็บในตัวแปร A
-
-      Serial.println(a);
-
-      delay(100);
-
-      Serial.println(".Q1.");
-    }
-    a = "";
-    mode = 1;
+  if (brightness < 2) {
+    sendChat(LED, "activate", "0", "0");
+  } else {
+    sendChat(LED, "deactivate", "0", "0");
   }
-  else
-  {
-    while (a == "")
-    {
-
-      chat.print("Q2"); // ส่งหัวข้อคำถาม ว่า Question1 ไปยัง Arduino
-
-      a = chat.readString(); // อ่าน Serial และนำไปเก็บในตัวแปร A
-
-      Serial.print(a);
-
-      delay(100);
-
-      Serial.print(".Q2.");
-    }
-    a = "";
-    mode = 0;
-  }
+  delay(1000);
 }

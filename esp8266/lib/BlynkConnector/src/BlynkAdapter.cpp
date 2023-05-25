@@ -4,7 +4,7 @@ BLYNK_WRITE(V0) {
 }
 
 BLYNK_WRITE(V1) {
-    curtaineLevel = param.asInt();
+    curtainLevel = param.asInt();
 }
 
 // BLYNK_WRITE(V11) {

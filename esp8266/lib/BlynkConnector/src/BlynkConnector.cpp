@@ -9,7 +9,12 @@
 BlynkConnector::BlynkConnector(const char* blynkCred[5], CurtainController& acurtainController)
 {
   _curtainController = acurtainController;
+  Serial.println("BlynkConnector::BlynkConnector");
+  Serial.println(blynkCred[2]);
+  Serial.println(blynkCred[3]);
+  Serial.println(blynkCred[4]);
   Blynk.begin(blynkCred[2], blynkCred[3], blynkCred[4]);
+  Serial.println("after BlynkConnector::BlynkConnector");
   Serial.println(Blynk.connected());
 }
 
@@ -22,3 +27,13 @@ void BlynkConnector::SendTemperature(double Temperature)
 {
   Blynk.virtualWrite(V12, Temperature);
 }
+
+// int BlynkConnector::GetCurtainLevel()
+// {
+//   return _curtainController.getLevel();
+// }
+
+// int BlynkConnector::GetCurtaionMode()
+// {
+//   return _curtainController.getMode();
+// }

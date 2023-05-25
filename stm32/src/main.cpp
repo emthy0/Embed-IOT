@@ -21,21 +21,6 @@ SlaveCurtainController curtain(MOTOR_PIN_IN1, MOTOR_PIN_IN2, MOTOR_PWM);
 // MotorController motor(MOTOR_PIN_IN1, MOTOR_PIN_IN2, MOTOR_PWM);
 // SlaveChatController::chat = SoftwareSerial(ESP_RX, ESP_TX)
 // SlaveChatController slaveChatController(ESP_RX, ESP_TX, ESP_BAUDRATE);
-
-void setup()
-{
-  chat.begin(ESP_BAUDRATE);
-  Serial.begin(9600);
-
-  sensor.setDHTpin(DHT_PIN);
-  sensor.setMQpin(MQ_PIN);
-  sensor.setLDRpin(LDR_PIN);
-  vTaskStartScheduler();
-}
-
-int counter = 0;
-int i;
-
 enum Controllers
 {
   UNKNOWN = -1,
@@ -44,6 +29,20 @@ enum Controllers
   LED,
   SENSOR
 };
+
+void setup()
+{
+  chat.begin(ESP_BAUDRATE);
+  Serial.begin(9600);
+  Serial.println("Hello World");
+  sensor.setDHTpin(DHT_PIN);
+  sensor.setMQpin(MQ_PIN);
+  sensor.setLDRpin(LDR_PIN);
+  vTaskStartScheduler();
+}
+
+int counter = 0;
+int i;
 
 Controllers getController(char *controller)
 {
@@ -75,6 +74,7 @@ void loop()
   // put your main code here, to run repeatedly:
   // Serial.println("Hello World");
   // Serial.printf
+  Serial.println("Hello World eiei");
   String rawFullcommand;
   char *rawController;
   const char *delimiter = " ";
@@ -82,6 +82,7 @@ void loop()
   char *command[3];
 
   rawFullcommand = chat.readStringUntil('\n');
+  Serial.println(rawFullcommand);
   i = 0;
   char fullCommand[rawFullcommand.length() + 1];
   strcpy(fullCommand, rawFullcommand.c_str());
@@ -128,7 +129,8 @@ void loop()
       lpg = sensor.getLPG();
       smoke = sensor.getSmoke();
       brightness = sensor.getBrightness();
-      Serial.printf("CO2: %d | TVOC: %d | Temperature: %d | Humidity: %d | CO: %d | LPG: %d | Smoke: %d | Brightness: %d \n", co2, tvoc, temp, humid, co, lpg, smoke, brightness);
+      // Serial.printf("CO2: %d | TVOC: %d | Temperature: %d | Humidity: %d | CO: %d | LPG: %d | Smoke: %d | Brightness: %d \n", co2, tvoc, temp, humid, co, lpg, smoke, brightness);
+      Serial.printf("CO2: %f | TVOC: %f | Temperature: %f| Humidity: %f | CO: %f | LPG: %f | Smoke: %f | Brightness: %f \n", co2, tvoc, temp, humid, co, lpg, smoke, brightness);
       float data[8] = {co2, tvoc, temp, humid, co, lpg, smoke, brightness};
       for (int i = 0; i < 8; i++)
       {
