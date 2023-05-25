@@ -22,9 +22,8 @@ BRIGHTNESSS LDRController::getBrightness()
 }
 
 void LDRController::classTask() {
-    if (_pin == -1 ) {
-        return;
-    }
+    if (_pin != -1 ) 
+    {
     int value; 
     value = analogRead(_pin);  
     if (value < 50) {
@@ -38,4 +37,7 @@ void LDRController::classTask() {
     } else {
         _brightness = BECKY;
     }
+    }
+    vTaskDelay(1000);
+
 }

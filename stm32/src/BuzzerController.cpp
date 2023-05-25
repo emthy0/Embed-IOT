@@ -24,6 +24,7 @@ void buzzerThread(void *pvParameters)
     {
       digitalWrite(buzzer_pin, LOW);
     }
+    vTaskDelete(NULL);
   }
 }
 
@@ -45,22 +46,21 @@ void BuzzerController::execute(char* command[3])
   {
     this->deactivate();
   }
-  else
-  {
-    // do nothing
-  }
+  
 }
 
 void BuzzerController::activate()
 {
   _currentState = true;
   BUZZER_STATE = true;
+  xTaskCreate(buzzerThread, "buzzerThread", 128, (void *)&_pin, 1, NULL);
 }
 
 void BuzzerController::deactivate()
 {
   _currentState = false;
   BUZZER_STATE = false;
+  xTaskCreate(buzzerThread, "buzzerThread", 128, (void *)&_pin, 1, NULL);
 }
 
 bool BuzzerController::getState()

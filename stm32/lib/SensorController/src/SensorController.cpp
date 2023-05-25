@@ -1,8 +1,8 @@
 #include <SensorController.h>
 
-SensorController::SensorController() : DHTController(), MQController(), SGPController(), LDRController()
+SensorController::SensorController(int dump) : DHTController(), MQController(), LDRController()
 {
-
+    Serial.println(dump + " SensorController created");
 }
 
 void SensorController::setDHTpin(int pin)
@@ -26,15 +26,15 @@ BRIGHTNESSS SensorController::getBrightness()
     return LDRController::getBrightness();
 }
 
-int SensorController::getCO2()
-{
-    return SGPController::getCO2();
-}
+// int SensorController::getCO2()
+// {
+//     return SGPController::getCO2();
+// }
 
-int SensorController::getTVOC()
-{
-    return SGPController::getTVOC();
-}
+// int SensorController::getTVOC()
+// {
+//     return SGPController::getTVOC();
+// }
 
 float SensorController::getTemperature()
 {

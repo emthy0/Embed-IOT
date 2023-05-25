@@ -19,27 +19,26 @@ void LEDController::execute(char* command[3])
     {
         this->deactivate();
     }
-    else
-    {
-        // do nothing
-    }
+    
+    // xTaskCreate(LEDController::classTask, "ledThread", 128, (void *)*this, 1, NULL)
 }
 
 void LEDController::activate()
 {
     this->_mode = ON;
+    recreateTask("LED Thread", 1000, 1000);
 
 }
 
 void LEDController::deactivate()
 {
     this->_mode = OFF;
+    recreateTask("LED Thread", 1000, 1000);
 }
 
 void LEDController::classTask()
 {
-    while (true)
-    {
+
         if (this->_mode == ON)
         {
             digitalWrite(_pin, HIGH);
@@ -48,5 +47,6 @@ void LEDController::classTask()
         {
             digitalWrite(_pin, LOW);
         }
-    }
+        vTaskDelete(NULL);
+    
 }

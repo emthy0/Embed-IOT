@@ -67,15 +67,15 @@ float MQController::_MQRead()
 
 void MQController::classTask()
 {
-    if (_pin == -1)
+    if (_pin != -1)
     {
-        return;
-    }
     int rs_ro_ratio = this->_MQRead() / _Ro;
     this->_setCO(MQGetPercentage(rs_ro_ratio, _COCurve));
     this->_setLPG(MQGetPercentage(rs_ro_ratio, _LPGCurve));
     this->_setSmoke(MQGetPercentage(rs_ro_ratio, _SmokeCurve));
     vTaskDelay(1000);
+    }
+
 
 
 }

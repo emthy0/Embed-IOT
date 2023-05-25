@@ -38,13 +38,13 @@ int DHTController::getHumidity()
 
 void DHTController::classTask()
 {
-  if (_pin == -1)
+  if (_pin != -1)
   {
-    return;
+    this->_setTemperature(_dht.getTemperature());
+    this->_setHumidity(_dht.getHumidity());
+    vTaskDelay(_dht.getMinimumSamplingPeriod());
   }
-  this->_setTemperature(_dht.getTemperature());
-  this->_setHumidity(_dht.getHumidity());
-  vTaskDelay(_dht.getMinimumSamplingPeriod());
+  
 }
 
 // void DHTController : Taskbase::taskfun(void *params)

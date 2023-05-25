@@ -12,16 +12,30 @@
 #include <PinConfig.h>
 #include <SlaveChatController.h>
 #include <SlaveCurtainController.h>
+#include <DHTController.h>
+#include <MQController.h>
+#include <SGPController.h>
+#include <LDRController.h>
+
+// #define configASSERT( x ) if( x == 0 ) { taskDISABLE_INTERRUPTS(); for(;;); }
 
 SoftwareSerial chat(ESP_RX, ESP_TX); // RX, TX to NodeMCU
+
 BuzzerController buzzer(BUZZER_PIN);
-SensorController sensor;
+// SensorController sensor(888);
+DHTController dht;
+MQController mqc;
+// SGPController sgpc;
+LDRController ldrc;
 LEDController led(LED_PIN);
 SlaveCurtainController curtain(MOTOR_PIN_IN1, MOTOR_PIN_IN2, MOTOR_PWM);
+
 // MotorController motor(MOTOR_PIN_IN1, MOTOR_PIN_IN2, MOTOR_PWM);
 // SlaveChatController::chat = SoftwareSerial(ESP_RX, ESP_TX)
 // SlaveChatController slaveChatController(ESP_RX, ESP_TX, ESP_BAUDRATE);
 void loopThread(void *pvParameters);
+void printThread(void *pvParameters);
+
 enum Controllers
 {
   UNKNOWN = -1,
@@ -33,14 +47,24 @@ enum Controllers
 
 void setup()
 {
-  chat.begin(ESP_BAUDRATE);
+
+  //
+  // xTaskCreate(printThread, "printThread", 100, NULL, 1, NULL);
   Serial.begin(9600);
   Serial.println("Hello World");
-  sensor.setDHTpin(DHT_PIN);
-  sensor.setMQpin(MQ_PIN);
-  sensor.setLDRpin(LDR_PIN);
+
+  chat.begin(ESP_BAUDRATE);
+  dht.setPin(DHT_PIN);
+  mqc.setPin(MQ_PIN);
+  ldrc.setPin(LDR_PIN);
+  // sensor.setDHTpin(DHT_PIN);
+  // sensor.setMQpin(MQ_PIN);
+  // sensor.setLDRpin(LDR_PIN);
+  Serial.println("Hello World in setup");
   xTaskCreate(loopThread, "loopThread", 10000, NULL, 1, NULL);
+  Serial.println("Hello World in setup2");
   vTaskStartScheduler();
+  Serial.println("Hello World in setup3");
 }
 
 int counter = 0;
@@ -70,85 +94,107 @@ Controllers getController(char *controller)
   }
 }
 
-
 void loopThread(void *pvParameters)
 {
-  
-  (void) pvParameters;
+  Serial.println("Hello World eiesssi");
+  (void)pvParameters;
 
-  while(true)
+  while (true)
   {
-  // put your main code here, to run repeatedly:
-  // Serial.println("Hello World");
-  // Serial.printf
-  Serial.println("Hello World eiei");
-  String rawFullcommand;
-  char *rawController;
-  const char *delimiter = " ";
-  char *substring;
-  char *command[3];
+    // put your main code here, to run repeatedly:
+    // Serial.println("Hello World");
+    // Serial.printf
+    Serial.println("Starting loop");
+    String rawFullcommand;
+    char *rawController;
+    const char *delimiter = " ";
+    char *substring;
+    char *command[3];
 
-  rawFullcommand = chat.readStringUntil('\n');
-  Serial.println(rawFullcommand);
-  i = 0;
-  char fullCommand[rawFullcommand.length() + 1];
-  strcpy(fullCommand, rawFullcommand.c_str());
-  substring = strtok(fullCommand, delimiter);
-  while (substring != NULL && i < 4)
-  {
-    if (i == 0)
+    if (chat.available())
     {
-      rawController = substring;
-    }
-    else
-    {
-      command[i-1] = substring;
-    }
-
-    substring = strtok(NULL, delimiter);
-    i++;
-  }
-
-  Controllers controller = getController(rawController);
-  // char *command[3];
-  // command = substrings [1:];
-  Serial.printf("AtController: %s | Executing %s \n",rawController, command[0]);
-  switch (controller)
-  {
-  case BUZZER:
-    buzzer.execute(command);
-    break;
-  case CURTAIN:
-    curtain.execute(command);
-    break;
-  case LED:
-    led.execute(command);
-    break;
-  case SENSOR:
-    {
-      float co2, tvoc, temp, humid, co, lpg, smoke, brightness;
-      byte dataByts[sizeof(float) * 8];
-      co2 = sensor.getCO2();
-      tvoc = sensor.getTVOC();
-      temp = sensor.getTemperature();
-      humid = sensor.getHumidity();
-      co = sensor.getCO();
-      lpg = sensor.getLPG();
-      smoke = sensor.getSmoke();
-      brightness = sensor.getBrightness();
-      // Serial.printf("CO2: %d | TVOC: %d | Temperature: %d | Humidity: %d | CO: %d | LPG: %d | Smoke: %d | Brightness: %d \n", co2, tvoc, temp, humid, co, lpg, smoke, brightness);
-      Serial.printf("CO2: %f | TVOC: %f | Temperature: %f| Humidity: %f | CO: %f | LPG: %f | Smoke: %f | Brightness: %f \n", co2, tvoc, temp, humid, co, lpg, smoke, brightness);
-      float data[8] = {co2, tvoc, temp, humid, co, lpg, smoke, brightness};
-      for (int i = 0; i < 8; i++)
+      Serial.println("Chat is available!!!!!");
+      rawFullcommand = chat.readStringUntil('\n');
+      Serial.println(rawFullcommand);
+      i = 0;
+      char fullCommand[rawFullcommand.length() + 1];
+      strcpy(fullCommand, rawFullcommand.c_str());
+      substring = strtok(fullCommand, delimiter);
+      while (substring != NULL && i < 4)
       {
-        memcpy(&dataByts[i * sizeof(float)], &data[i], sizeof(float));
+        if (i == 0)
+        {
+          rawController = substring;
+        }
+        else
+        {
+          command[i - 1] = substring;
+        }
+
+        substring = strtok(NULL, delimiter);
+        i++;
       }
-      chat.write(dataByts, sizeof(dataByts));
-      break;
+
+      Controllers controller = getController(rawController);
+      // char *command[3];
+      // command = substrings [1:];
+      Serial.printf("AtController: %s | Executing %s \n", rawController, command[0]);
+      switch (controller)
+      {
+      case BUZZER:
+        buzzer.execute(command);
+        break;
+      case CURTAIN:
+        curtain.execute(command);
+        break;
+      case LED:
+        led.execute(command);
+        break;
+      case SENSOR:
+      {
+        float co2, tvoc, temp, humid, co, lpg, smoke, brightness;
+        byte dataByts[sizeof(float) * 8];
+        // co2 = sensor.getCO2();
+        // tvoc = sensor.getTVOC();
+        temp = dht.getTemperature();
+        humid = dht.getHumidity();
+        co = mqc.getCO();
+        lpg = mqc.getLPG();
+        smoke = mqc.getSmoke();
+        brightness = ldrc.getBrightness();
+        // Serial.printf("CO2: %d | TVOC: %d | Temperature: %d | Humidity: %d | CO: %d | LPG: %d | Smoke: %d | Brightness: %d \n", co2, tvoc, temp, humid, co, lpg, smoke, brightness);
+        Serial.printf("CO2: %f | TVOC: %f | Temperature: %f| Humidity: %f | CO: %f | LPG: %f | Smoke: %f | Brightness: %f \n", co2, tvoc, temp, humid, co, lpg, smoke, brightness);
+        float data[8] = {co2, tvoc, temp, humid, co, lpg, smoke, brightness};
+        for (int i = 0; i < 8; i++)
+        {
+          memcpy(&dataByts[i * sizeof(float)], &data[i], sizeof(float));
+        }
+        chat.write(dataByts, sizeof(dataByts));
+        break;
+      }
+      default:
+        break;
+      }
+      vTaskDelay(1000);
     }
-  default:
-    break;
-  }
   }
 }
 
+void loop()
+{
+  // put your main code here, to run repeatedly:
+  // Serial.println("Hello World");
+  // Serial.printf
+  Serial.begin(9600);
+  Serial.println("Hello World eiei");
+}
+
+// void printThread(void *pvParameters)
+// {
+//   (void)pvParameters;
+//   while (true)
+//   {
+//     Serial.println("Hello World in printThread");
+//     vTaskDelay(1000);
+//   }
+// }
