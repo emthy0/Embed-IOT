@@ -12,8 +12,11 @@ void SlaveCurtainController::execute(char* command[3])
   CurtainMode mode = (CurtainMode)atoi(command[0]);
   int level = atoi(command[1]);
   CurtainController::setMode(mode);
+  int prevLevel = CurtainController::getLevel();
+  MotorController::setPower(50);
+  int duration = 10*(level - prevLevel);
+  MotorController::activate(FORWARD, duration);
   CurtainController::setLevel(level);
-  MotorController::activate(FORWARD, 10);
 }
 
 // void SlaveCurtainController::setMode(enum CurtainMode mode)
