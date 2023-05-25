@@ -35,5 +35,15 @@ void MasterCurtainController::_execute()
   // command[0] = (char*)controller;
   // command[1] = (char*)_currentMode;
   // command[2] = (char*)_currentLevel;
-  _chat.printf("%s %d %d\n", "curtain", _currentMode, _currentLevel);
+    char mode[4];
+  char level[4];
+  String paddedLevel = String("0000") + String(_currentLevel);
+  paddedLevel = paddedLevel.substring(paddedLevel.length() - 4);
+  paddedLevel.toCharArray(level, sizeof(level));
+
+
+  String paddedMode = String("0000") + String(_currentMode);
+  paddedMode = paddedMode.substring(paddedMode.length() - 4);
+  paddedMode.toCharArray(mode, sizeof(mode));
+  _chat.printf("%s %s %s 0000\n", "curt", mode, level);
 }

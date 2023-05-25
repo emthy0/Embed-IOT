@@ -2,7 +2,7 @@
 #define NO_GLOBAL_BLYNK true
 #include <BlynkSimpleEsp8266.h>
 #include <BlynkConfig.h>
-#include <BlynkAdapter.h>
+// #include <BlynkAdapter.h>
 #include <Arduino.h>
 #include <SoftwareSerial.h>
 #include <ESP8266WiFi.h>
@@ -17,7 +17,7 @@
 
 SoftwareSerial chat(D5, D4); // RX, TX
 String a;
-
+int curtainLevel, curtainMode;
 const char *blynkCred[5] = {BLYNK_TEMPLATE_ID, BLYNK_TEMPLATE_NAME, BLYNK_AUTH_TOKEN, BLYNK_SSID, BLYNK_PASS};
 
 // SoftwareSerial MasterCurtainController::chat (const chat&);
@@ -107,5 +107,20 @@ void loop()
   {
     sendChat(LED, "deat", "0000", "0000");
   }
+  Serial.printf("Level: %d",curtainLevel );
   delay(1000);
+}
+
+BLYNK_WRITE(V0) {
+  int curtainMode = param.asInt();
+  if (curtainMode == 1) {
+    curtainCC.setMode(AUTO);
+  } else {
+    curtainCC.setMode(MANUAL);
+  }
+}
+
+BLYNK_WRITE(V1) {
+  curtainLevel = param.asInt();
+  curtainCC.setLevel(curtainLevel);
 }
