@@ -4,13 +4,14 @@
 
 #include <STM32FreeRTOS.h>
 #include <Taskbase.h>
-class DHTController : protected TaskClass
+class DHTController 
+// : protected TaskClass
 {
 public:
   DHTController();
   void setPin(int pin);
-  int getTemperature();
-  int getHumidity();
+  float getTemperature();
+  float getHumidity();
 
 private:
   int _pin = -1;

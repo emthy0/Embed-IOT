@@ -57,13 +57,13 @@ void setup()
   dht.setPin(DHT_PIN);
   mqc.setPin(MQ_PIN);
   ldrc.setPin(LDR_PIN);
-  char* command[3] = {"0","25","0"};
-  curtain.execute(command);
+  // char* command[3] = {"0","25","0"};
+  // curtain.execute(command);
   // sensor.setDHTpin(DHT_PIN);
   // sensor.setMQpin(MQ_PIN);
   // sensor.setLDRpin(LDR_PIN);
   Serial.println("Hello World in setup");
-  xTaskCreate(loopThread, "loopThread", 1010, NULL, 1, NULL);
+  xTaskCreate(loopThread, "loopThread", 10000, NULL, 1, NULL);
   Serial.println("Hello World in setup2");
   vTaskStartScheduler();
   Serial.println("Hello World in setup3");
@@ -72,8 +72,10 @@ void setup()
 int counter = 0;
 int i;
 
-Controllers getController(char controller[4])
+Controllers getController(char rcontroller[4])
 {
+  String controller = String(rcontroller[0]) + String(rcontroller[1]) + String(rcontroller[2]) + String(rcontroller[3]);
+  
   if (controller == "buzz")
   {
     return BUZZER;
@@ -101,7 +103,7 @@ void loopThread(void *pvParameters)
   Serial.println("Hello World eiesssi");
   (void)pvParameters;
 
-  while (true)
+  for (;;)
   {
     Serial.println("Starting loop");
     char buffer[20];
@@ -124,10 +126,14 @@ void loopThread(void *pvParameters)
     //String(buffer).toCharArray(action,4,5);
     //String(buffer).toCharArray(args1,4,10);
     //String(buffer).toCharArray(args2,4,15);
-    Serial.printf("Controller: %s | Command: %s | args %s %s\n", rawController, action, args1, args2);
+    
     Controllers controller = getController(rawController);
+    Serial.println(controller);
+    // Serial.printf("Controller: %s | Command: %s | args %s %s\n", rawController, action, args1, args2);
     if (controller != UNKNOWN)
+    // if (false)
     {
+      
       char* command[3] = {action, args1, args2};
       if (controller == BUZZER)
       {
@@ -143,26 +149,29 @@ void loopThread(void *pvParameters)
       }
       else if (controller == SENSOR)
       {
-        float co2, tvoc, temp, humid, co, lpg, smoke, brightness;
+        float co2, tvoc, temp, humid, co, lpg, smoke;
+        int brightness;
         byte dataByts[sizeof(float) * 8];
-        // co2 = sensor.getCO2();
+        // co2 = mqc.getCO2();
         // tvoc = sensor.getTVOC();
         temp = dht.getTemperature();
         humid = dht.getHumidity();
-        co = mqc.getCO();
-        lpg = mqc.getLPG();
-        smoke = mqc.getSmoke();
-        brightness = ldrc.getBrightness();
+        // co = mqc.getCO();
+        // lpg = mqc.getLPG();
+        // smoke = mqc.getSmoke();
+        brightness = static_cast<int>(ldrc.getBrightness());
+        Serial.println("Sending data");
         // Serial.printf("CO2: %d | TVOC: %d | Temperature: %d | Humidity: %d | CO: %d | LPG: %d | Smoke: %d | Brightness: %d \n", co2, tvoc, temp, humid, co, lpg, smoke, brightness);
-        Serial.printf("CO2: %f | TVOC: %f | Temperature: %f| Humidity: %f | CO: %f | LPG: %f | Smoke: %f | Brightness: %f \n", co2, tvoc, temp, humid, co, lpg, smoke, brightness);
-        float data[8] = {co2, tvoc, temp, humid, co, lpg, smoke, brightness};
+        Serial.printf("CO2: %.2f | TVOC: %.2f | Temperature: %.2f| Humidity: %.2f | CO: %.2f| LPG: %.2f | Smoke: %.2f | Brightness: %d \n", co2, tvoc, temp, humid, co, lpg, smoke, brightness);
+        float data[8] = {co2, tvoc, temp, humid, co, lpg, smoke, (float)brightness};
         for (int i = 0; i < 8; i++)
         {
           memcpy(&dataByts[i * sizeof(float)], &data[i], sizeof(float));
         }
         chat.write(dataByts, sizeof(dataByts));
+        // chat.printf("CO2: %.2f | TVOC: %.2f | Temperature: %.2f| Humidity: %.2f | CO: %.2f| LPG: %.2f | Smoke: %.2f | Brightness: %d \n", co2, tvoc, temp, humid, co, lpg, smoke, brightness);
       }
-      vTaskDelay(1000);
+      // vTaskDelay(1000);
     }
   }
   Serial.println("Hello Hell in loopThread");
@@ -170,6 +179,9 @@ void loopThread(void *pvParameters)
 
 void loop()
 {
-  Serial.begin(9600);
+  // Serial.begin(9600);
   Serial.println("Should not be here");
+  xTaskCreate(loopThread, "loopThread", 10000, NULL, 0, NULL);
+  Serial.println("Hello World in setup2");
+  vTaskStartScheduler();
 }

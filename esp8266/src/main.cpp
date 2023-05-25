@@ -97,9 +97,9 @@ void loop()
   blynk.SendCO2(co2);
   blynk.SendTVOC(tvoc);
   blynk.SendTemperature(temp);
-  blynk.SendHumidity(10);
+  blynk.SendHumidity(humid);
   blynk.SendBrightness(brightness);
-  if (brightness < 2)
+  if (brightness < 3)
   {
     sendChat(LED, "acti", "0000", "0000");
   }

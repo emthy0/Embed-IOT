@@ -2,7 +2,7 @@
 #include <Arduino.h>
 #include <TaskBase.h>
 
-LEDController::LEDController(int pin) : TaskClass("LED Thread", 1000, 1000)
+LEDController::LEDController(int pin) : TaskClass("LED Thread", 1, 1000)
 {
     _pin = pin;
     pinMode(_pin, OUTPUT);
@@ -11,11 +11,13 @@ LEDController::LEDController(int pin) : TaskClass("LED Thread", 1000, 1000)
 
 void LEDController::execute(char* command[3])
 {
-    if (command[0] == "activate")
+    char* rawAction = command[0];
+    String parsedCommand = String(rawAction[0]) + String(rawAction[1]) + String(rawAction[2]) + String(rawAction[3]);
+    if (parsedCommand == "acti")
     {
         this->activate();
     }
-    else if (command[0] == "deactivate")
+    else if (parsedCommand == "deac")
     {
         this->deactivate();
     }
@@ -26,14 +28,16 @@ void LEDController::execute(char* command[3])
 void LEDController::activate()
 {
     this->_mode = ON;
-    recreateTask("LED Thread", 1000, 1000);
+    Serial.println("LED ON");
+    recreateTask("LED Threadaaa", 1, 1000);
 
 }
 
 void LEDController::deactivate()
 {
     this->_mode = OFF;
-    recreateTask("LED Thread", 1000, 1000);
+    Serial.println("LED OFF");
+    recreateTask("LED Threadaaaaaaa", 1, 1000);
 }
 
 void LEDController::classTask()

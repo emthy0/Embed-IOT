@@ -1,7 +1,8 @@
 #include <LDRController.h>
 #include <Arduino.h>
 
-LDRController::LDRController(): TaskClass("LDR Thread",1000,1000)
+LDRController::LDRController()
+// : TaskClass("LDR Thread",1000,1000)
 {
 }
 
@@ -17,7 +18,24 @@ void LDRController::_setBrightness(BRIGHTNESSS brightness)
 }
 
 BRIGHTNESSS LDRController::getBrightness()
+
 {
+     if (_pin != -1 ) 
+    {
+    int value; 
+    value = analogRead(_pin);  
+    if (value < 50) {
+        _brightness = NIGGA;
+    } else if (value < 200) {
+        _brightness = CHOCO;
+    } else if (value < 500) {
+        _brightness = YELLOWMONKEY;
+    } else if (value < 800) {
+        _brightness = KAREN;
+    } else {
+        _brightness = BECKY;
+    }
+    }
     return  _brightness;
 }
 

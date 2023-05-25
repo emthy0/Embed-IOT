@@ -11,8 +11,8 @@ void buzzerThread(void *pvParameters)
   int buzzer_pin = *((int *)pvParameters);
   pinMode(buzzer_pin, OUTPUT);
 
-  while (true)
-  {
+  // while (true)
+  // {
     if (BUZZER_STATE)
     {
       digitalWrite(buzzer_pin, HIGH);
@@ -25,7 +25,7 @@ void buzzerThread(void *pvParameters)
       digitalWrite(buzzer_pin, LOW);
     }
     vTaskDelete(NULL);
-  }
+  // }
 }
 
 BuzzerController::BuzzerController(int pin)
@@ -38,14 +38,17 @@ BuzzerController::BuzzerController(int pin)
 
 void BuzzerController::execute(char* command[3])
 {
-  if (command[0] == "activate")
-  {
-    this->activate();
-  }
-  else if (command[0] == "deactivate")
-  {
-    this->deactivate();
-  }
+  char* rawAction = command[0];
+    String parsedCommand = String(rawAction[0]) + String(rawAction[1]) + String(rawAction[2]) + String(rawAction[3]);
+    if (parsedCommand == "acti")
+    {
+        this->activate();
+    }
+    else if (parsedCommand == "deac")
+    {
+        this->deactivate();
+    }
+    
   
 }
 
