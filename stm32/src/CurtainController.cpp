@@ -2,6 +2,8 @@
 
 CurtainController::CurtainController()
 {
+  this->setMode(MANUAL);
+  this->setLevel(0);
 }
 
 void CurtainController::execute(char* command[3])
