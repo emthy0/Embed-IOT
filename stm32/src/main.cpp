@@ -70,21 +70,21 @@ void setup()
 int counter = 0;
 int i;
 
-Controllers getController(char *controller)
+Controllers getController(char controller[4])
 {
-  if (controller == "buzzer")
+  if (controller == "buzz")
   {
     return BUZZER;
   }
-  else if (controller == "curtain")
+  else if (controller == "curt")
   {
     return CURTAIN;
   }
-  else if (controller == "led")
+  else if (controller == "ledd")
   {
     return LED;
   }
-  else if (controller == "sensor")
+  else if (controller == "sens")
   {
     return SENSOR;
   }
@@ -101,46 +101,26 @@ void loopThread(void *pvParameters)
 
   while (true)
   {
-    // put your main code here, to run repeatedly:
-    // Serial.println("Hello World");
-    // Serial.printf
     Serial.println("Starting loop");
-    char buffer[100];
-    String rawFullcommand;
-    char *rawController;
-    const char *delimiter = " ";
-    char *substring;
-    char *command[3];
-    chat.readBytesUntil('\n',buffer,100);
-    Serial.println(buffer);
-    if (rawFullcommand)
+    char buffer[20];
+    char *fullCommand;
+    char rawController[4];
+    char action[4];
+    char args1[4];
+    char args2[4];
+    
+    // chat.readBytesUntil('\n',buffer,20);
+    chat.readBytes(buffer, 20);
+    // fullCommand = strtok(buffer, "\n");
+    String(buffer).toCharArray(rawController,4,0);
+    String(buffer).toCharArray(action,4,5);
+    String(buffer).toCharArray(args1,4,10);
+    String(buffer).toCharArray(args2,4,15);
+    Serial.printf("Controller: %s | Command: %s | args %s %s\n", rawController, action, args1, args2);
+    Controllers controller = getController(rawController);
+    if (controller != UNKNOWN)
     {
-      Serial.println("Chat is available!!!!!");
-
-      Serial.println(rawFullcommand);
-      i = 0;
-      char fullCommand[rawFullcommand.length() + 1];
-      strcpy(fullCommand, rawFullcommand.c_str());
-      substring = strtok(fullCommand, delimiter);
-      while (substring != NULL && i < 4)
-      {
-        if (i == 0)
-        {
-          rawController = substring;
-        }
-        else
-        {
-          command[i - 1] = substring;
-        }
-
-        substring = strtok(NULL, delimiter);
-        i++;
-      }
-
-      Controllers controller = getController(rawController);
-      // char *command[3];
-      // command = substrings [1:];
-      Serial.printf("AtController: %s | Executing %s \n", rawController, command[0]);
+      char* command[3] = {action, args1, args2};
       if (controller == BUZZER)
       {
         buzzer.execute(command);
@@ -182,19 +162,6 @@ void loopThread(void *pvParameters)
 
 void loop()
 {
-  // put your main code here, to run repeatedly:
-  // Serial.println("Hello World");
-  // Serial.printf
   Serial.begin(9600);
   Serial.println("Should not be here");
 }
-
-// void printThread(void *pvParameters)
-// {
-//   (void)pvParameters;
-//   while (true)
-//   {
-//     Serial.println("Hello World in printThread");
-//     vTaskDelay(1000);
-//   }
-// }

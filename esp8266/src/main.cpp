@@ -36,19 +36,19 @@ void sendChat(Controllers intcontroller, String command, String arg1 = "0", Stri
   switch (intcontroller)
   {
   case BUZZER:
-    controller = "buzzer";
+    controller = "buzz";
     break;
   case CURTAIN:
-    controller = "curtain";
+    controller = "curt";
     break;
   case LED:
-    controller = "led";
+    controller = "ledd";
     break;
   case SENSOR:
-    controller = "sensor";
+    controller = "sens";
     break;
   default:
-    controller = "unknown";
+    controller = "unkn";
     break;
   }
   chat.printf("%s %s %s %s\n", controller.c_str(), command.c_str(), arg1.c_str(), arg2.c_str());
@@ -73,7 +73,8 @@ void loop()
   Serial.printf("Looping %d\n", count);
   count++;
   byte dataBytes[sizeof(float) * 8];
-  sendChat(SENSOR, "0", "0", "0");
+  sendChat(SENSOR, "0000", "0000", "0000");
+
   chat.readBytes(dataBytes, sizeof(float) * 8);
   memcpy(&co2, dataBytes, sizeof(float));
   memcpy(&tvoc, dataBytes + sizeof(float), sizeof(float));
@@ -92,10 +93,13 @@ void loop()
   // }
   // curtainCC.setLevel(50);
 
-  if (brightness < 2) {
-    sendChat(LED, "activate", "0", "0");
-  } else {
-    sendChat(LED, "deactivate", "0", "0");
+  if (brightness < 2)
+  {
+    sendChat(LED, "acti", "0000", "0000");
+  }
+  else
+  {
+    sendChat(LED, "deat", "0000", "0000");
   }
   delay(1000);
 }

@@ -2,7 +2,7 @@
 
 SensorController::SensorController(int dump) : DHTController(), MQController(), LDRController()
 {
-    Serial.println(dump + " SensorController created");
+    (void) dump; // to suppress unused parameter warning
 }
 
 void SensorController::setDHTpin(int pin)
