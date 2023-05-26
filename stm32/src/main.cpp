@@ -35,6 +35,7 @@ SlaveCurtainController curtain(MOTOR_PIN_IN1, MOTOR_PIN_IN2, MOTOR_PWM);
 // SlaveChatController slaveChatController(ESP_RX, ESP_TX, ESP_BAUDRATE);
 void loopThread(void *pvParameters);
 void printThread(void *pvParameters);
+//int curtainPos = 0 // 0 = lowest, 100 = highest
 
 enum Controllers
 {
@@ -57,8 +58,9 @@ void setup()
   dht.setPin(DHT_PIN);
   mqc.setPin(MQ_PIN);
   ldrc.setPin(LDR_PIN);
-  // char* command[3] = {"0","25","0"};
-  // curtain.execute(command);
+  char* command[3] = {"0","-100","0"}; // pulls the curtain down
+  //char* command[3] = {"0","100","0"}; // pulls the curtain up
+  curtain.execute(command);
   // sensor.setDHTpin(DHT_PIN);
   // sensor.setMQpin(MQ_PIN);
   // sensor.setLDRpin(LDR_PIN);
