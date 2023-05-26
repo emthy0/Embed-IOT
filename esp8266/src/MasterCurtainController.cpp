@@ -7,7 +7,7 @@ MasterCurtainController::MasterCurtainController(SoftwareSerial& serial):  _chat
 {
   // _chat = &serial;
   _currentLevel = 0;
-  _currentMode = 0;
+  _currentMode = MANUAL;
 }
 
 void MasterCurtainController::setMode(enum CurtainMode mode)
@@ -26,6 +26,11 @@ void MasterCurtainController::setLevel(int level)
 int MasterCurtainController::getLevel()
 {
   return _currentLevel;
+}
+
+CurtainMode MasterCurtainController::getMode()
+{
+  return _currentMode;
 }
 
 void MasterCurtainController::_execute()

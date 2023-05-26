@@ -10,10 +10,11 @@ class MasterCurtainController : public CurtainController
         void setMode(enum CurtainMode mode);
         void setLevel(int level);
         int getLevel();
+        CurtainMode getMode();
     private:
         SoftwareSerial& _chat;
         int _currentLevel;
-        int _currentMode;
+        CurtainMode _currentMode;
         void _execute();
     
 };

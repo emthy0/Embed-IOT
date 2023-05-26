@@ -59,8 +59,8 @@ void setup()
   mqc.setPin(MQ_PIN);
   ldrc.setPin(LDR_PIN);
   //char* command[3] = {"0","-20","0"}; // pulls the curtain down
-  //char* command[3] = {"0","20","0"}; // pulls the curtain up
-  //curtain.execute(command);
+  // char* command[3] = {"nega","0100","0000"}; // pulls the curtain up
+  curtain.execute(command);
   // sensor.setDHTpin(DHT_PIN);
   // sensor.setMQpin(MQ_PIN);
   // sensor.setLDRpin(LDR_PIN);

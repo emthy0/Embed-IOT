@@ -31,7 +31,7 @@ void MotorController::activate(MotorMode mode, int duration)
     this->_duration = duration;
     this->_mode = mode;
     // xTaskCreate(motorThread, "motor Thread", 128, NULL, 1, NULL);
-
+    recreateTask("motor Thread", 1000, 1000);
     // TaskClass("motor Thread", 1000, 1000);
 }
 
