@@ -15,7 +15,10 @@ public:
   int getLPG();
   int getSmoke();
 
-private:
+  float _MQResistanceCalculation(int raw_adc);
+  float _MQCalibration(int mq_pin);
+  int _MQGetGasPercentage(float rs_ro_ratio, int gas_id);
+  float _MQRead(int mq_pin);
   int _pin = -1;
   int _co = -1;
   int _lpg = -1;
@@ -31,9 +34,8 @@ private:
   float _SmokeCurve[3] = {2.3, 0.53, -0.44};
   float           _Ro           =  10;
   float           _RL_VALUE     =  5;
-  float _MQResistanceCalculation(int raw_adc);
-  float _MQCalibration(int mq_pin);
-  float _MQRead();
+
+private:
 };
 
 #endif

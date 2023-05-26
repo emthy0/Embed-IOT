@@ -58,6 +58,7 @@ void setup()
   dht.setPin(DHT_PIN);
   mqc.setPin(MQ_PIN);
   ldrc.setPin(LDR_PIN);
+  mqc._MQCalibration(MQ_PIN);
   // char* command[3] = {"0","-20","0"}; // pulls the curtain down
   //  char* command[3] = {"nega","0100","0000"}; // pulls the curtain up
   //  curtain.execute(command);
