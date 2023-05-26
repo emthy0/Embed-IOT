@@ -17,6 +17,19 @@
 #include <SGPController.h>
 #include <LDRController.h>
 
+#define         MQ_PIN                       (PA1)       
+#define         RL_VALUE                     (PA1)     
+#define         RO_CLEAN_AIR_FACTOR          (9.83)                                                  
+#define         CALIBARAION_SAMPLE_TIMES     (50)   
+#define         CALIBRATION_SAMPLE_INTERVAL  (500)                                                      
+#define         READ_SAMPLE_INTERVAL         (50)    
+#define         READ_SAMPLE_TIMES            (5)     
+#define         GAS_LPG                      (0)
+#define         GAS_CO                       (1)
+#define         GAS_SMOKE                    (2)
+  float           _Ro           =  10;
+  float           _RL_VALUE     =  5;
+
 // #define configASSERT( x ) if( x == 0 ) { taskDISABLE_INTERRUPTS(); for(;;); }
 
 SoftwareSerial chat(PA8, PA7_ALT1); // RX, TX to NodeMCU
@@ -59,7 +72,7 @@ void setup()
   mqc.setPin(MQ_PIN);
   ldrc.setPin(LDR_PIN);
   //char* command[3] = {"0","-20","0"}; // pulls the curtain down
-  // char* command[3] = {"nega","0100","0000"}; // pulls the curtain up
+  char* command[3] = {"nega","0000","0000"}; // pulls the curtain up
   curtain.execute(command);
   // sensor.setDHTpin(DHT_PIN);
   // sensor.setMQpin(MQ_PIN);
@@ -67,8 +80,19 @@ void setup()
   Serial.println("Hello World in setup");
   xTaskCreate(loopThread, "loopThread", 10000, NULL, 1, NULL);
   Serial.println("Hello World in setup2");
+
+  Serial.print("Calibrating...\n");                
+  float Ro = mqc._MQCalibration(MQ_PIN);                       //Calibrating the sensor. Please make sure the sensor is in clean air 
+                                                    //when you perform the calibration                    
+  Serial.print("Calibration is done...\n"); 
+  Serial.print("Ro=");
+  //Serial.print(Ro);
+  Serial.print("kohm");
+  Serial.print("\n");
+
   vTaskStartScheduler();
   Serial.println("Hello World in setup3");
+
 }
 
 int counter = 0;
@@ -130,7 +154,7 @@ void loopThread(void *pvParameters)
     //String(buffer).toCharArray(args2,4,15);
     
     Controllers controller = getController(rawController);
-    Serial.println(controller);
+    Serial.printf("%s %d\n",rawController, controller);
     // Serial.printf("Controller: %s | Command: %s | args %s %s\n", rawController, action, args1, args2);
     if (controller != UNKNOWN)
     // if (false)
@@ -158,13 +182,14 @@ void loopThread(void *pvParameters)
         // tvoc = sensor.getTVOC();
         temp = dht.getTemperature();
         humid = dht.getHumidity();
-        // co = mqc.getCO();
-        // lpg = mqc.getLPG();
-        // smoke = mqc.getSmoke();
+         co = mqc._MQGetGasPercentage(mqc._MQRead(MQ_PIN)/_Ro,GAS_LPG)/1000;
+         lpg = mqc._MQGetGasPercentage(mqc._MQRead(MQ_PIN)/_Ro,GAS_CO)/100000;
+         smoke = mqc._MQGetGasPercentage(mqc._MQRead(MQ_PIN)/_Ro,GAS_SMOKE)/1000;
         brightness = static_cast<int>(ldrc.getBrightness());
         Serial.println("Sending data");
+        Serial.println(temp);
         // Serial.printf("CO2: %d | TVOC: %d | Temperature: %d | Humidity: %d | CO: %d | LPG: %d | Smoke: %d | Brightness: %d \n", co2, tvoc, temp, humid, co, lpg, smoke, brightness);
-        Serial.printf("CO2: %.2f | TVOC: %.2f | Temperature: %.2f| Humidity: %.2f | CO: %.2f| LPG: %.2f | Smoke: %.2f | Brightness: %d \n", co2, tvoc, temp, humid, co, lpg, smoke, brightness);
+        // Serial.printf("CO2: %.2f | TVOC: %.2f | Temperature: %.2f| Humidity: %.2f | CO: %.2f| LPG: %.2f | Smoke: %.2f | Brightness: %d \n", co2, tvoc, temp, humid, co, lpg, smoke, brightness);
         float data[8] = {co2, tvoc, temp, humid, co, lpg, smoke, (float)brightness};
         for (int i = 0; i < 8; i++)
         {

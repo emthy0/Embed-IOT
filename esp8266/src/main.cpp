@@ -101,7 +101,7 @@ void loop()
   blynk.SendTemperature(temp);
   blynk.SendHumidity(humid);
   blynk.SendBrightness(brightness);
-  if (brightness < 3)
+  if (brightness > 2)
   {
     sendChat(LED, "acti", "0000", "0000");
   }
@@ -111,7 +111,7 @@ void loop()
   }
   Serial.printf("Level: %d",curtainLevel );
 
-  if (brightness < 3)
+  if (smoke > 20)
   {
     sendChat(BUZZER, "acti", "0000", "0000");
   }
