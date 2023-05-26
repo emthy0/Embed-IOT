@@ -142,19 +142,21 @@ void loopThread(void *pvParameters)
     // chat.readBytesUntil('\n',buffer,20);
     chat.readBytes(buffer, 20);
     // fullCommand = strtok(buffer, "\n");
+    Serial.println(buffer);
     for(int i = 0; i < 4; i++){
       rawController[i] = buffer[i];
       action[i] = buffer[i+5];
       args1[i] = buffer[i+10];
       args2[i] = buffer[i+15];
     }
-    //String(buffer).toCharArray(rawController,4,0);
-    //String(buffer).toCharArray(action,4,5);
-    //String(buffer).toCharArray(args1,4,10);
-    //String(buffer).toCharArray(args2,4,15);
+    // String(buffer).toCharArray(rawController,5,0);
+    // String(buffer).toCharArray(action,5,5);
+    // String(buffer).toCharArray(args1,5,10);
+    // String(buffer).toCharArray(args2,5,15);
     
     Controllers controller = getController(rawController);
-    Serial.printf("%s %d\n",rawController, controller);
+    Serial.println(controller);
+    Serial.println(rawController);
     // Serial.printf("Controller: %s | Command: %s | args %s %s\n", rawController, action, args1, args2);
     if (controller != UNKNOWN)
     // if (false)
@@ -180,11 +182,12 @@ void loopThread(void *pvParameters)
         byte dataByts[sizeof(float) * 8];
         // co2 = mqc.getCO2();
         // tvoc = sensor.getTVOC();
-        temp = dht.getTemperature();
-        humid = dht.getHumidity();
          co = mqc._MQGetGasPercentage(mqc._MQRead(MQ_PIN)/_Ro,GAS_LPG)/1000;
          lpg = mqc._MQGetGasPercentage(mqc._MQRead(MQ_PIN)/_Ro,GAS_CO)/100000;
          smoke = mqc._MQGetGasPercentage(mqc._MQRead(MQ_PIN)/_Ro,GAS_SMOKE)/1000;
+        temp = dht.getTemperature();
+        humid = dht.getHumidity();
+        
         brightness = static_cast<int>(ldrc.getBrightness());
         Serial.println("Sending data");
         Serial.println(temp);

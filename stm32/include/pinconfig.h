@@ -6,7 +6,7 @@
 
 // SENSOR PIN CONFIGURATION //
 
-#define DHT_PIN PA9 
+#define DHT_PIN PA0
 #define MQ_PIN PA1  
 #define LDR_PIN PC1
 
