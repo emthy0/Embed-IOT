@@ -136,10 +136,18 @@ void loop()
     sendChat(CURTAIN, "deac", "0000", "0000");
   }} else {
     char level[4];
-    String paddedLevel = String("0000") + String(curtainLevel);
-  paddedLevel = paddedLevel.substring(paddedLevel.length() - 4);
-  paddedLevel.toCharArray(level, sizeof(level));
-    sendChat(CURTAIN, "manu", level, "0000");
+    String paddedLevel = String("0000") + String(curtainLevel-curtainPos);
+    if (curtainLevel - curtainPos < 0){
+      String paddedLevel = String("0000") + String(curtainPos-curtainLevel);
+    }
+    paddedLevel = paddedLevel.substring(paddedLevel.length() - 4);
+    paddedLevel.toCharArray(level, sizeof(level));
+    if (curtainLevel - curtainPos < 0){
+      sendChat(CURTAIN, "nega", level, "0000");
+    } else {
+      sendChat(CURTAIN, "posi", level, "0000");
+    }
+    curtainPos = curtainLevel;
   }
 
   delay(1000);
