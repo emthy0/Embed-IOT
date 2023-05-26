@@ -11,50 +11,165 @@
 #include <LEDController.h>
 #include <PinConfig.h>
 #include <SlaveChatController.h>
+#include <SlaveCurtainController.h>
+#include <DHTController.h>
+#include <MQController.h>
+#include <SGPController.h>
+#include <LDRController.h>
 
-SoftwareSerial chat(ESP_RX,ESP_TX); // RX, TX to NodeMCU
+// #define configASSERT( x ) if( x == 0 ) { taskDISABLE_INTERRUPTS(); for(;;); }
+
+SoftwareSerial chat(PA8, PA7_ALT1); // RX, TX to NodeMCU
+
 BuzzerController buzzer(BUZZER_PIN);
-SensorController sensorController;
+// SensorController sensor(888);
+DHTController dht;
+MQController mqc;
+// SGPController sgpc;
+LDRController ldrc;
 LEDController led(LED_PIN);
-MotorController motor(MOTOR_PIN_IN1, MOTOR_PIN_IN2, MOTOR_PWM);
+SlaveCurtainController curtain(MOTOR_PIN_IN1, MOTOR_PIN_IN2, MOTOR_PWM);
+
+// MotorController motor(MOTOR_PIN_IN1, MOTOR_PIN_IN2, MOTOR_PWM);
 // SlaveChatController::chat = SoftwareSerial(ESP_RX, ESP_TX)
 // SlaveChatController slaveChatController(ESP_RX, ESP_TX, ESP_BAUDRATE);
+void loopThread(void *pvParameters);
+void printThread(void *pvParameters);
+// int curtainPos = 0 // 0 = lowest, 100 = highest
 
+enum Controllers
+{
+  UNKNOWN = -1,
+  BUZZER,
+  CURTAIN,
+  LED,
+  SENSOR
+};
 
 void setup()
 {
-  chat.begin(ESP_BAUDRATE);
-  Serial.begin(9600);
-  
-  sensorController.setDHTpin(DHT_PIN);
-  sensorController.setMQpin(MQ_PIN);
-  sensorController.setLDRpin(LDR_PIN);
-  vTaskStartScheduler();
-  
+
+  //
+  // xTaskCreate(printThread, "printThread", 100, NULL, 1, NULL);
+  Serial.begin(115200);
+  Serial.println("Hello World");
+
+  chat.begin(9600);
+  dht.setPin(DHT_PIN);
+  mqc.setPin(MQ_PIN);
+  ldrc.setPin(LDR_PIN);
+  // char* command[3] = {"0","-20","0"}; // pulls the curtain down
+  //  char* command[3] = {"nega","0100","0000"}; // pulls the curtain up
+  //  curtain.execute(command);
+  //  sensor.setDHTpin(DHT_PIN);
+  //  sensor.setMQpin(MQ_PIN);
+  //  sensor.setLDRpin(LDR_PIN);
+  Serial.println("Hello World in setup");
+  // xTaskCreate(loopThread, "loopThread", 10000, NULL, 1, NULL);
+  Serial.println("Hello World in setup2");
+  // vTaskStartScheduler();
+  Serial.println("Hello World in setup3");
 }
 
 int counter = 0;
-String rawFullcommand;
-const char *delimiter = " ";
-char* substring;
-char* substrings[4]; 
 int i;
-void loop()
-{
-  // put your main code here, to run repeatedly:
-  // Serial.println("Hello World");
-  // Serial.printf
-    rawFullcommand = chat.readStringUntil('\n');
-    i = 0;
-    char fullCommand[rawFullcommand.length() + 1];
-    strcpy(fullCommand, rawFullcommand.c_str());
-    substring = strtok(fullCommand, delimiter);
-    while (substring != NULL && i < 4) 
-    {
-        substrings[i] = substring;
-        substring = strtok(NULL, delimiter);
-        i++;
-    }
 
-    Serial.println(substrings[0]);
+Controllers getController(char rcontroller[4])
+{
+  String controller = String(rcontroller[0]) + String(rcontroller[1]) + String(rcontroller[2]) + String(rcontroller[3]);
+
+  if (controller == "buzz")
+  {
+    return BUZZER;
+  }
+  else if (controller == "curt")
+  {
+    return CURTAIN;
+  }
+  else if (controller == "ledd")
+  {
+    return LED;
+  }
+  else if (controller == "sens")
+  {
+    return SENSOR;
+  }
+  else
+  {
+    return UNKNOWN;
+  }
+}
+
+void loop()
+
+{
+  Serial.println("Starting loop");
+  char buffer[20];
+  char *fullCommand;
+  char rawController[4];
+  char action[4];
+  char args1[4];
+  char args2[4];
+
+  // chat.readBytesUntil('\n',buffer,20);
+  chat.readBytes(buffer, 20);
+  // fullCommand = strtok(buffer, "\n");
+  for (int i = 0; i < 4; i++)
+  {
+    rawController[i] = buffer[i];
+    action[i] = buffer[i + 5];
+    args1[i] = buffer[i + 10];
+    args2[i] = buffer[i + 15];
+  }
+  // String(buffer).toCharArray(rawController,4,0);
+  // String(buffer).toCharArray(action,4,5);
+  // String(buffer).toCharArray(args1,4,10);
+  // String(buffer).toCharArray(args2,4,15);
+
+  Controllers controller = getController(rawController);
+  Serial.println(controller);
+  // Serial.printf("Controller: %s | Command: %s | args %s %s\n", rawController, action, args1, args2);
+  if (controller != UNKNOWN)
+  // if (false)
+  {
+
+    char *command[3] = {action, args1, args2};
+    if (controller == BUZZER)
+    {
+      buzzer.execute(command);
+    }
+    else if (controller == CURTAIN)
+    {
+      curtain.execute(command);
+    }
+    else if (controller == LED)
+    {
+      led.execute(command);
+    }
+    else if (controller == SENSOR)
+    {
+      float co2, tvoc, temp, humid, co, lpg, smoke;
+      int brightness;
+      byte dataByts[sizeof(float) * 8];
+      // co2 = mqc.getCO2();
+      // tvoc = sensor.getTVOC();
+      temp = dht.getTemperature();
+      humid = dht.getHumidity();
+      // co = mqc.getCO();
+      // lpg = mqc.getLPG();
+      // smoke = mqc.getSmoke();
+      brightness = static_cast<int>(ldrc.getBrightness());
+      Serial.println("Sending data");
+      // Serial.printf("CO2: %d | TVOC: %d | Temperature: %d | Humidity: %d | CO: %d | LPG: %d | Smoke: %d | Brightness: %d \n", co2, tvoc, temp, humid, co, lpg, smoke, brightness);
+      Serial.printf("CO2: %.2f | TVOC: %.2f | Temperature: %.2f| Humidity: %.2f | CO: %.2f| LPG: %.2f | Smoke: %.2f | Brightness: %d \n", co2, tvoc, temp, humid, co, lpg, smoke, brightness);
+      float data[8] = {co2, tvoc, temp, humid, co, lpg, smoke, (float)brightness};
+      for (int i = 0; i < 8; i++)
+      {
+        memcpy(&dataByts[i * sizeof(float)], &data[i], sizeof(float));
+      }
+      chat.write(dataByts, sizeof(dataByts));
+      // chat.printf("CO2: %.2f | TVOC: %.2f | Temperature: %.2f| Humidity: %.2f | CO: %.2f| LPG: %.2f | Smoke: %.2f | Brightness: %d \n", co2, tvoc, temp, humid, co, lpg, smoke, brightness);
+    }
+    // vTaskDelay(1000);
+  }
 }

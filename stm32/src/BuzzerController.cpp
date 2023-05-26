@@ -24,6 +24,7 @@ void buzzerThread(void *pvParameters)
     {
       digitalWrite(buzzer_pin, LOW);
     }
+    //vTaskDelete(NULL);
   }
 }
 
@@ -35,16 +36,39 @@ BuzzerController::BuzzerController(int pin)
   xTaskCreate(buzzerThread, "buzzerThread", 128, (void *)&_pin, 1, NULL);
 }
 
+void BuzzerController::execute(char* command[3])
+{
+  char* rawAction = command[0];
+    String parsedCommand = String(rawAction[0]) + String(rawAction[1]) + String(rawAction[2]) + String(rawAction[3]);
+    //Serial.println(parsedCommand);
+    if (parsedCommand == "acti")
+    {
+        this->activate();
+    }
+    else if (parsedCommand == "deac")
+    {
+        this->deactivate();
+    }
+    
+  
+}
+
 void BuzzerController::activate()
 {
+  Serial.println("Buzzer ON");
   _currentState = true;
   BUZZER_STATE = true;
+  xTaskCreate(buzzerThread, "buzzerThread", 128, (void *)&_pin, 1, NULL);
+  //xTaskCreate(buzzerThread, "buzzerThread", 128, (void *)&PC0, 1, NULL);
 }
 
 void BuzzerController::deactivate()
 {
+  Serial.println("Buzzer OFF");
   _currentState = false;
   BUZZER_STATE = false;
+  xTaskCreate(buzzerThread, "buzzerThread", 128, (void *)&_pin, 1, NULL);
+  //xTaskCreate(buzzerThread, "buzzerThread", 128, (void *)&PC0, 1, NULL);
 }
 
 bool BuzzerController::getState()

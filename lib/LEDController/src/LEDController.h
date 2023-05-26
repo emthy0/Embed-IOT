@@ -20,6 +20,7 @@ public:
     void activate();
     void deactivate();
     bool isActive();
+    void execute(char *command[3]);
 private:
     LEDMode _mode;
     int _pin;

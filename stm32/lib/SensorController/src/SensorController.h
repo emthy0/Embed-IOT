@@ -7,16 +7,17 @@
 #include <LDRController.h>
 
 
-class SensorController : protected DHTController, protected MQController, protected SGPController, protected LDRController
+class SensorController : protected DHTController, protected MQController, protected LDRController
 {
 public:
-  SensorController();
+  SensorController(int dump);
   void setDHTpin(int pin);
   void setMQpin(int pin);
   void setLDRpin(int pin);
 
-  int getCO2();
-  int getTVOC();
+  BRIGHTNESSS getBrightness();
+  // int getCO2();
+  // int getTVOC();
   float getTemperature();
   float getHumidity();
   int getCO();
@@ -29,11 +30,11 @@ private:
   // MQController _mqController;
   // int _dht_pin;
   int _mq_pin;
-  int _sgp_pin;
+  // int _sgp_pin;
   int _ldr_pin;
 
-  int _co2;
-  int _tvoc;
+  // int _co2;
+  // int _tvoc;
   // float _temperature;
   // float _humidity;
   int _co;
@@ -42,7 +43,7 @@ private:
 
   // void _readDHT();
   void _readMQ();
-  void _readSGP();
+  // void _readSGP();
   void _readLDR();
 };
 

@@ -1,7 +1,13 @@
 #include <MQController.h>
 #include <Arduino.h>
 
-MQController::MQController() : TaskClass("MQ Thread", 1000, 1000)
+int  MQGetPercentage(float rs_ro_ratio, float *pcurve)
+{
+  return (pow(10,( ((log(rs_ro_ratio)-pcurve[1])/pcurve[2]) + pcurve[0])));
+}
+
+MQController::MQController() 
+// : TaskClass("MQ Thread", 1000, 1000)
 {
 }
 
@@ -27,16 +33,19 @@ void MQController::_setSmoke(int smoke)
 
 int MQController::getCO()
 {
-  return _co;
+  int rs_ro_ratio = this->_MQRead() / _Ro;
+  return MQGetPercentage(rs_ro_ratio, _COCurve);
 }
 
 int MQController::getLPG(){
-    return _lpg;
+  int rs_ro_ratio = this->_MQRead() / _Ro;
+    return MQGetPercentage(rs_ro_ratio, _LPGCurve);
 }
 
 int MQController::getSmoke()
 {
-    return _smoke;
+  int rs_ro_ratio = this->_MQRead() / _Ro;
+    return MQGetPercentage(rs_ro_ratio, _SmokeCurve);
 }
 
 float MQController::_MQResistanceCalculation(int raw_adc)
@@ -44,10 +53,7 @@ float MQController::_MQResistanceCalculation(int raw_adc)
   return ( ((float)_RL_VALUE*(1023-raw_adc)/raw_adc));
 }
 
-int  MQGetPercentage(float rs_ro_ratio, float *pcurve)
-{
-  return (pow(10,( ((log(rs_ro_ratio)-pcurve[1])/pcurve[2]) + pcurve[0])));
-}
+
 
 
 float MQController::_MQRead()
@@ -56,7 +62,7 @@ float MQController::_MQRead()
     float rs = 0;
     for (i=0;i<_READ_SAMPLE_TIMES;i++) {
         rs += this->_MQResistanceCalculation(analogRead(_pin));
-        delay(_READ_SAMPLE_TIMES);
+        vTaskDelay(_READ_SAMPLE_TIMES);
     }
 
     rs = rs/_READ_SAMPLE_TIMES;
@@ -67,15 +73,15 @@ float MQController::_MQRead()
 
 void MQController::classTask()
 {
-    if (_pin == -1)
+    if (_pin != -1)
     {
-        return;
-    }
     int rs_ro_ratio = this->_MQRead() / _Ro;
     this->_setCO(MQGetPercentage(rs_ro_ratio, _COCurve));
     this->_setLPG(MQGetPercentage(rs_ro_ratio, _LPGCurve));
     this->_setSmoke(MQGetPercentage(rs_ro_ratio, _SmokeCurve));
     vTaskDelay(1000);
+    }
+
 
 
 }

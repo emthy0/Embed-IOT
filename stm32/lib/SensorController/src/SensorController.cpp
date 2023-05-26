@@ -1,8 +1,8 @@
 #include <SensorController.h>
 
-SensorController::SensorController() : DHTController(), MQController(), SGPController(), LDRController()
+SensorController::SensorController(int dump) : DHTController(), MQController(), LDRController()
 {
-
+    (void) dump; // to suppress unused parameter warning
 }
 
 void SensorController::setDHTpin(int pin)
@@ -21,15 +21,20 @@ void SensorController::setLDRpin(int pin)
     LDRController::setPin(pin);
 }
 
-int SensorController::getCO2()
+BRIGHTNESSS SensorController::getBrightness()
 {
-    return SGPController::getCO2();
+    return LDRController::getBrightness();
 }
 
-int SensorController::getTVOC()
-{
-    return SGPController::getTVOC();
-}
+// int SensorController::getCO2()
+// {
+//     return SGPController::getCO2();
+// }
+
+// int SensorController::getTVOC()
+// {
+//     return SGPController::getTVOC();
+// }
 
 float SensorController::getTemperature()
 {

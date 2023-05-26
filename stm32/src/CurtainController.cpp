@@ -1,10 +1,17 @@
-#include "Arduino.h"
 #include "CurtainController.h"
 
-CurtainController::CurtainController(int pin)
+CurtainController::CurtainController()
 {
-  _pin = pin;
-  pinMode(_pin, OUTPUT);
+  this->setMode(MANUAL);
+  this->setLevel(0);
+}
+
+void CurtainController::execute(char* command[3])
+{
+  CurtainMode mode = (CurtainMode)atoi(command[0]);
+  int level = atoi(command[1]);
+  this->setMode(mode);
+  this->setLevel(level);
 }
 
 void CurtainController::setMode(enum CurtainMode mode)

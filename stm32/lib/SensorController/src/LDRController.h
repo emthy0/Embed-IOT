@@ -22,7 +22,8 @@ enum BRIGHTNESSS
   BECKY
 };
 
-class LDRController : protected TaskClass
+class LDRController 
+// : protected TaskClass
 {
 public:
   LDRController();

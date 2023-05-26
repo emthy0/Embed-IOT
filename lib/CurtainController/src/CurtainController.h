@@ -19,16 +19,16 @@ class CurtainController
 {
   public:
     CurtainController();
-    CurtainController(int pin);
     // CurtainController(SoftwareSerial chat);
     // __weak CurtainController(int RX, int TX, int baudrate);
     void setMode(enum CurtainMode mode);
     void setLevel(int level);
     int getLevel();
+    void execute(char* command[3]);
   private:
     int _pin;
     int _currentLevel;
-    int _currentMode;
+    CurtainMode _currentMode;
     int _controllerMode = CONTROLLER_PLATFORM;
 };
 

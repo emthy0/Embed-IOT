@@ -3,7 +3,7 @@
 
 
 #include <BlynkSimpleEsp8266.h>
-extern int curtainMode, curtaineLevel;
+extern int curtainMode, curtainLevel;
 extern double Humidity, Temp;
 // extern BlynkWifi NBlynk;
 // 

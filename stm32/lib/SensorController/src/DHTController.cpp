@@ -2,7 +2,8 @@
 #include "DHT.h"
 #include <GlobalSensorValue.h>
 
-DHTController::DHTController() : TaskClass("DHT Thread", 1000, 1000)
+DHTController::DHTController() 
+// : TaskClass("DHT Thread", 1000, 1000)
 {
 }
 
@@ -26,25 +27,25 @@ void DHTController::_setHumidity(int humidity)
   
 }
 
-int DHTController::getTemperature()
+float DHTController::getTemperature()
 {
-  return _temperature;
+  return _dht.getTemperature();
 }
 
-int DHTController::getHumidity()
+float DHTController::getHumidity()
 {
-  return _humidity;
+  return _dht.getHumidity();
 }
 
 void DHTController::classTask()
 {
-  if (_pin == -1)
+  if (_pin != -1)
   {
-    return;
+    this->_setTemperature(_dht.getTemperature());
+    this->_setHumidity(_dht.getHumidity());
+    vTaskDelay(_dht.getMinimumSamplingPeriod());
   }
-  this->_setTemperature(_dht.getTemperature());
-  this->_setHumidity(_dht.getHumidity());
-  vTaskDelay(_dht.getMinimumSamplingPeriod());
+  
 }
 
 // void DHTController : Taskbase::taskfun(void *params)

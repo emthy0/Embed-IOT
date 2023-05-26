@@ -4,7 +4,8 @@
 
 #include <STM32FreeRTOS.h>
 #include <Taskbase.h>
-class MQController : protected TaskClass
+class MQController 
+// : protected TaskClass
 {
 
 public:
