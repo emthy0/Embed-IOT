@@ -30,9 +30,28 @@ void MotorController::activate(MotorMode mode, int duration)
 
     this->_duration = duration;
     this->_mode = mode;
-    // xTaskCreate(motorThread, "motor Thread", 128, NULL, 1, NULL);
-    recreateTask("motor Thread", 1000, 1000);
-    // TaskClass("motor Thread", 1000, 1000);
+        this->_active = true;
+    if (_mode == STOP)
+    {
+        this->_stop();
+    }
+    else
+    {
+        if (_mode == 1)
+        {
+            digitalWrite(_pinIn1, HIGH);
+            digitalWrite(_pinIn2, LOW);
+        }
+        else
+        {
+            digitalWrite(_pinIn1, LOW);
+            digitalWrite(_pinIn2, HIGH);
+        }
+        analogWrite(_pinPWM, (_power * 255 / 100));
+        delay(_duration);
+        this->_stop();
+        
+    }
 }
 
 int MotorController::getMode()

@@ -30,7 +30,16 @@ void LEDController::activate()
 {
     this->_mode = ON;
     Serial.println("LED ON");
-    recreateTask("LED Threadaaa", 1, 1000);
+    if (this->_mode == ON)
+        {
+            //digitalWrite(_pin, HIGH);
+            digitalWrite(PB5, HIGH);
+        }
+        else
+        {
+            //digitalWrite(_pin, LOW);
+            digitalWrite(PB5, LOW);
+        }
 
 }
 
@@ -38,7 +47,16 @@ void LEDController::deactivate()
 {
     this->_mode = OFF;
     Serial.println("LED OFF");
-    recreateTask("LED Threadaaaaaaa", 1, 1000);
+    if (this->_mode == ON)
+        {
+            //digitalWrite(_pin, HIGH);
+            digitalWrite(PB5, HIGH);
+        }
+        else
+        {
+            //digitalWrite(_pin, LOW);
+            digitalWrite(PB5, LOW);
+        }
 }
 
 void LEDController::classTask()

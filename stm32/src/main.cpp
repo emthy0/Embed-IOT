@@ -33,8 +33,6 @@ SlaveCurtainController curtain(MOTOR_PIN_IN1, MOTOR_PIN_IN2, MOTOR_PWM);
 // MotorController motor(MOTOR_PIN_IN1, MOTOR_PIN_IN2, MOTOR_PWM);
 // SlaveChatController::chat = SoftwareSerial(ESP_RX, ESP_TX)
 // SlaveChatController slaveChatController(ESP_RX, ESP_TX, ESP_BAUDRATE);
-void loopThread(void *pvParameters);
-void printThread(void *pvParameters);
 //int curtainPos = 0 // 0 = lowest, 100 = highest
 
 enum Controllers
@@ -60,14 +58,9 @@ void setup()
   ldrc.setPin(LDR_PIN);
   //char* command[3] = {"0","-20","0"}; // pulls the curtain down
   // char* command[3] = {"nega","0100","0000"}; // pulls the curtain up
-  curtain.execute(command);
   // sensor.setDHTpin(DHT_PIN);
   // sensor.setMQpin(MQ_PIN);
   // sensor.setLDRpin(LDR_PIN);
-  Serial.println("Hello World in setup");
-  xTaskCreate(loopThread, "loopThread", 10000, NULL, 1, NULL);
-  Serial.println("Hello World in setup2");
-  vTaskStartScheduler();
   Serial.println("Hello World in setup3");
 }
 
@@ -100,11 +93,10 @@ Controllers getController(char rcontroller[4])
   }
 }
 
-void loopThread(void *pvParameters)
-{
-  Serial.println("Hello World eiesssi");
-  (void)pvParameters;
 
+void loop()
+{
+  // Serial.begin(9600);
   for (;;)
   {
     Serial.println("Starting loop");
@@ -176,14 +168,4 @@ void loopThread(void *pvParameters)
       // vTaskDelay(1000);
     }
   }
-  Serial.println("Hello Hell in loopThread");
-}
-
-void loop()
-{
-  // Serial.begin(9600);
-  Serial.println("Should not be here");
-  xTaskCreate(loopThread, "loopThread", 10000, NULL, 0, NULL);
-  Serial.println("Hello World in setup2");
-  vTaskStartScheduler();
 }
