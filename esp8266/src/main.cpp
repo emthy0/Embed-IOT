@@ -54,6 +54,7 @@ void sendChat(Controllers intcontroller, String command, String arg1 = "0", Stri
     controller = "unkn";
     break;
   }
+  Serial.printf("Sending %s %s %s %s\n", controller.c_str(), command.c_str(), arg1.c_str(), arg2.c_str());
   chat.printf("%s %s %s %s\n", controller.c_str(), command.c_str(), arg1.c_str(), arg2.c_str());
 }
 
@@ -89,7 +90,7 @@ void loop()
   memcpy(&fbrightness, dataBytes + sizeof(float) * 7, sizeof(float));
   brightness = (int)fbrightness;
   Serial.printf("CO2: %f | TVOC: %f | Temperature: %f| Humidity: %f | CO: %f | LPG: %f | Smoke: %f | Brightness: %d \n", co2, tvoc, temp, humid, co, lpg, smoke, brightness);
-  Serial.printf("Curtain Level: %d | Curtain Mode: %d\n", curtainLevel, curtainCC.getMode());
+  Serial.printf("Curtain Level: %d | Curtain Mode: %d\n", curtainPos, curtainCC.getMode());
   // if (curtainMode == 1) {
   //   // AUTO CURTAIN LEVEL CALCULATION HERE
   // } else {
@@ -109,7 +110,7 @@ void loop()
   {
     sendChat(LED, "deac", "0000", "0000");
   }
-  Serial.printf("Level: %d",curtainLevel );
+  Serial.printf("Level: %d", curtainLevel);
 
   if (smoke > 20)
   {
@@ -121,31 +122,40 @@ void loop()
   }
 
   if (curtainCC.getMode() == AUTO)
-  {if (brightness < 2 && curtainPos > 0)
   {
-    sendChat(CURTAIN, "nega", "0020", "0020");
-    curtainPos -= 20;
-  }
-  else if (brightness > 2 && curtainPos < 100)
-  {
-    sendChat(CURTAIN, "posi", "0020", "0020");
-    curtainPos += 20;
+    if (brightness < 2 && curtainPos > 0)
+    {
+      sendChat(CURTAIN, "nega", "0020", "0020");
+      curtainPos -= 20;
+    }
+    else if (brightness > 2 && curtainPos < 100)
+    {
+      sendChat(CURTAIN, "posi", "0020", "0020");
+      curtainPos += 20;
+    }
+    else
+    {
+      sendChat(CURTAIN, "deac", "0000", "0000");
+    }
   }
   else
   {
-    sendChat(CURTAIN, "deac", "0000", "0000");
-  }} else {
     char level[4];
-    String paddedLevel = String("0000") + String(curtainLevel-curtainPos);
-    if (curtainLevel - curtainPos < 0){
-      String paddedLevel = String("0000") + String(curtainPos-curtainLevel);
+    String paddedLevel ;
+    paddedLevel= String("0000") + String( curtainLevel - curtainPos);
+    if (curtainLevel - curtainPos < 0)
+    {
+      paddedLevel = String("0000") + String(curtainPos - curtainLevel);
     }
     paddedLevel = paddedLevel.substring(paddedLevel.length() - 4);
     paddedLevel.toCharArray(level, sizeof(level));
-    if (curtainLevel - curtainPos < 0){
-      sendChat(CURTAIN, "nega", level, "0000");
-    } else {
-      sendChat(CURTAIN, "posi", level, "0000");
+    if (curtainLevel - curtainPos < 0)
+    {
+      sendChat(CURTAIN, "nega", paddedLevel, "0000");
+    }
+    else
+    {
+      sendChat(CURTAIN, "posi", paddedLevel, "0000");
     }
     curtainPos = curtainLevel;
   }
@@ -153,16 +163,21 @@ void loop()
   delay(1000);
 }
 
-BLYNK_WRITE(V0) {
+BLYNK_WRITE(V0)
+{
   int curtainMode = param.asInt();
-  if (curtainMode == 1) {
+  if (curtainMode == 1)
+  {
     curtainCC.setMode(AUTO);
-  } else {
+  }
+  else
+  {
     curtainCC.setMode(MANUAL);
   }
 }
 
-BLYNK_WRITE(V1) {
+BLYNK_WRITE(V1)
+{
   curtainLevel = param.asInt();
   curtainCC.setLevel(curtainLevel);
 }

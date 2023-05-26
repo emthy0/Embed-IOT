@@ -177,8 +177,8 @@ void loopThread(void *pvParameters)
       }
       else if (controller == SENSOR)
       {
-        float co2, tvoc, temp, humid, co, lpg, smoke;
-        int brightness;
+        float co2, tvoc, temp, humid;
+        int brightness , co, lpg, smoke;
         byte dataByts[sizeof(float) * 8];
         // co2 = mqc.getCO2();
         // tvoc = sensor.getTVOC();
@@ -193,7 +193,7 @@ void loopThread(void *pvParameters)
         Serial.println(temp);
         // Serial.printf("CO2: %d | TVOC: %d | Temperature: %d | Humidity: %d | CO: %d | LPG: %d | Smoke: %d | Brightness: %d \n", co2, tvoc, temp, humid, co, lpg, smoke, brightness);
         // Serial.printf("CO2: %.2f | TVOC: %.2f | Temperature: %.2f| Humidity: %.2f | CO: %.2f| LPG: %.2f | Smoke: %.2f | Brightness: %d \n", co2, tvoc, temp, humid, co, lpg, smoke, brightness);
-        float data[8] = {co2, tvoc, temp, humid, co, lpg, smoke, (float)brightness};
+        float data[8] = {co2, tvoc, temp, humid, (float)co, (float)lpg, (float)smoke, (float)brightness};
         for (int i = 0; i < 8; i++)
         {
           memcpy(&dataByts[i * sizeof(float)], &data[i], sizeof(float));
