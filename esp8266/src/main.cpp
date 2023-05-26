@@ -70,6 +70,7 @@ void setup()
 }
 int mode = 0;
 int count = 0;
+int curtainPos = 0; // 0 = lowest, 100 = highest
 void loop()
 {
   Serial.printf("Looping %d\n", count);
@@ -105,7 +106,7 @@ void loop()
   }
   else
   {
-    sendChat(LED, "deat", "0000", "0000");
+    sendChat(LED, "deac", "0000", "0000");
   }
   Serial.printf("Level: %d",curtainLevel );
 
@@ -115,16 +116,20 @@ void loop()
   }
   else
   {
-    sendChat(BUZZER, "deat", "0000", "0000");
+    sendChat(BUZZER, "deac", "0000", "0000");
   }
 
-  if (brightness < 3)
+  if (brightness < 2 && curtainPos < 100 && curtainPos > 0)
   {
-    sendChat(CURTAIN, "acti", "0000", "0000");
+    sendChat(CURTAIN, "acti", "0-20", "0-20");
+  }
+  else if (brightness > 2 && curtainPos < 100 && curtainPos > 0)
+  {
+    sendChat(CURTAIN, "acti", "0020", "0020");
   }
   else
   {
-    sendChat(CURTAIN, "deat", "0000", "0000");
+    sendChat(CURTAIN, "deac", "0000", "0000");
   }
 
   delay(1000);

@@ -13,6 +13,7 @@ void LEDController::execute(char* command[3])
 {
     char* rawAction = command[0];
     String parsedCommand = String(rawAction[0]) + String(rawAction[1]) + String(rawAction[2]) + String(rawAction[3]);
+    //Serial.println(parsedCommand);
     if (parsedCommand == "acti")
     {
         this->activate();
@@ -45,11 +46,13 @@ void LEDController::classTask()
 
         if (this->_mode == ON)
         {
-            digitalWrite(_pin, HIGH);
+            //digitalWrite(_pin, HIGH);
+            digitalWrite(PB5, HIGH);
         }
         else
         {
-            digitalWrite(_pin, LOW);
+            //digitalWrite(_pin, LOW);
+            digitalWrite(PB5, LOW);
         }
         vTaskDelete(NULL);
     
