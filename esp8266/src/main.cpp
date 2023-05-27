@@ -9,13 +9,14 @@
 #include <BlynkConnector.h>
 #include <MasterCurtainController.h>
 
-#define STM_RX D5
-#define STM_TX D4
+#define STM_RX D2
+#define STM_TX D3
+
 
 #define CURTAIN_RX D6
 #define CURTAIN_TX D7
 
-SoftwareSerial chat(D5, D4); // RX, TX
+SoftwareSerial chat(D2, D3); // RX, TX
 String a;
 int curtainLevel, curtainMode;
 const char *blynkCred[5] = {BLYNK_TEMPLATE_ID, BLYNK_TEMPLATE_NAME, BLYNK_AUTH_TOKEN, BLYNK_SSID, BLYNK_PASS};

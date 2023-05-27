@@ -32,7 +32,7 @@
 
 // #define configASSERT( x ) if( x == 0 ) { taskDISABLE_INTERRUPTS(); for(;;); }
 
-HardwareSerial Serial6(); // RX, TX to NodeMCU
+HardwareSerial Serial6(PA_12, PA_11); // RX, TX to NodeMCU
 #define chat Serial6
 BuzzerController buzzer(BUZZER_PIN);
 // SensorController sensor(888);
@@ -192,7 +192,7 @@ void loopThread(void *pvParameters)
         Serial.println("Sending data");
         Serial.println(temp);
         // Serial.printf("CO2: %d | TVOC: %d | Temperature: %d | Humidity: %d | CO: %d | LPG: %d | Smoke: %d | Brightness: %d \n", co2, tvoc, temp, humid, co, lpg, smoke, brightness);
-        // Serial.printf("CO2: %.2f | TVOC: %.2f | Temperature: %.2f| Humidity: %.2f | CO: %.2f| LPG: %.2f | Smoke: %.2f | Brightness: %d \n", co2, tvoc, temp, humid, co, lpg, smoke, brightness);
+        Serial.printf("CO2: %.2f | TVOC: %.2f | Temperature: %.2f| Humidity: %.2f | CO: %.2f| LPG: %.2f | Smoke: %.2f | Brightness: %d \n", co2, tvoc, temp, humid, co, lpg, smoke, brightness);
         float data[8] = {co2, tvoc, temp, humid, (float)co, (float)lpg, (float)smoke, (float)brightness};
         for (int i = 0; i < 8; i++)
         {
