@@ -18,8 +18,20 @@
 #include <MQController.h>
 #include <SGPController.h>
 #include <LDRController.h>
+#include <Servo.h>
 
 String data = "";
+
+// global variables
+// 0 <= pos <= 180
+int desirePos = 0;
+int currentPos = 0;
+
+// define tasks
+void servoThread(void *p);
+
+// define pins
+#define SERVO_PIN PA4
 
 void requestEvent()                         
   {
@@ -53,4 +65,35 @@ void loop()
   // 
   // requestEvent()
   // delay(1000);
+}
+
+
+void servoThread(void *p)
+{
+  // setup
+  Servo myServo
+  (void) p;
+  myServo.attach(SERVO_PIN);
+
+  // loop
+  while (true)
+  {
+    // doesn't do anything if it's already at the desire position
+    if (currentPos == desirePos){
+      vTaskDelay(15);
+      continue;
+    }
+    // move the servo to the desire position
+    else if (currentPos < desirePos){
+      currentPos++;
+      myServo.write(currentPos);
+      vTaskDelay(15);
+    }
+    // same as above but in the opposite direction
+    else{
+      currentPos--;
+      myServo.write(currentPos);
+      vTaskDelay(15);
+    }
+  }
 }
