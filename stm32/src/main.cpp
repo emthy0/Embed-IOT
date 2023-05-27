@@ -24,8 +24,8 @@ String data = "";
 
 // global variables
 // 0 <= pos <= 180
-int desirePos = 0;
-int currentPos = 0;
+int desirePos = 0;     // the position that the servo should move to
+int currentPos = 0;    // the current position of the servo
 
 // define tasks
 void servoThread(void *p);
