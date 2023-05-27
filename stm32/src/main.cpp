@@ -32,8 +32,8 @@
 
 // #define configASSERT( x ) if( x == 0 ) { taskDISABLE_INTERRUPTS(); for(;;); }
 
-SoftwareSerial chat(PA8, PA7_ALT1); // RX, TX to NodeMCU
-
+HardwareSerial Serial6(); // RX, TX to NodeMCU
+#define chat Serial6
 BuzzerController buzzer(BUZZER_PIN);
 // SensorController sensor(888);
 DHTController dht;
