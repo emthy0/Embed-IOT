@@ -9,13 +9,14 @@
 #include <BlynkConnector.h>
 #include <MasterCurtainController.h>
 
-#define STM_RX D5
-#define STM_TX D4
+#define STM_RX D2
+#define STM_TX D3
+
 
 #define CURTAIN_RX D6
 #define CURTAIN_TX D7
 
-SoftwareSerial chat(D5, D4); // RX, TX
+SoftwareSerial chat(D2, D3); // RX, TX
 String a;
 int curtainLevel, curtainMode;
 const char *blynkCred[5] = {BLYNK_TEMPLATE_ID, BLYNK_TEMPLATE_NAME, BLYNK_AUTH_TOKEN, BLYNK_SSID, BLYNK_PASS};
@@ -54,6 +55,7 @@ void sendChat(Controllers intcontroller, String command, String arg1 = "0", Stri
     controller = "unkn";
     break;
   }
+  Serial.printf("Sending %s %s %s %s\n", controller.c_str(), command.c_str(), arg1.c_str(), arg2.c_str());
   chat.printf("%s %s %s %s\n", controller.c_str(), command.c_str(), arg1.c_str(), arg2.c_str());
 }
 
@@ -89,7 +91,7 @@ void loop()
   memcpy(&fbrightness, dataBytes + sizeof(float) * 7, sizeof(float));
   brightness = (int)fbrightness;
   Serial.printf("CO2: %f | TVOC: %f | Temperature: %f| Humidity: %f | CO: %f | LPG: %f | Smoke: %f | Brightness: %d \n", co2, tvoc, temp, humid, co, lpg, smoke, brightness);
-  Serial.printf("Curtain Level: %d | Curtain Mode: %d\n", curtainLevel, curtainCC.getMode());
+  Serial.printf("Curtain Level: %d | Curtain Mode: %d\n", curtainPos, curtainCC.getMode());
   // if (curtainMode == 1) {
   //   // AUTO CURTAIN LEVEL CALCULATION HERE
   // } else {
@@ -101,7 +103,7 @@ void loop()
   blynk.SendTemperature(temp);
   blynk.SendHumidity(humid);
   blynk.SendBrightness(brightness);
-  if (brightness < 3)
+  if (brightness > 2)
   {
     sendChat(LED, "acti", "0000", "0000");
   }
@@ -109,9 +111,9 @@ void loop()
   {
     sendChat(LED, "deac", "0000", "0000");
   }
-  Serial.printf("Level: %d",curtainLevel );
+  Serial.printf("Level: %d", curtainLevel);
 
-  if (brightness < 3)
+  if (smoke > 20)
   {
     sendChat(BUZZER, "acti", "0000", "0000");
   }
@@ -121,40 +123,62 @@ void loop()
   }
 
   if (curtainCC.getMode() == AUTO)
-  {if (brightness < 2 && curtainPos > 0)
   {
-    sendChat(CURTAIN, "nega", "0020", "0020");
-    curtainPos -= 20;
-  }
-  else if (brightness > 2 && curtainPos < 100)
-  {
-    sendChat(CURTAIN, "posi", "0020", "0020");
-    curtainPos += 20;
+    if (brightness < 2 && curtainPos > 0)
+    {
+      sendChat(CURTAIN, "nega", "0020", "0020");
+      curtainPos -= 20;
+    }
+    else if (brightness > 2 && curtainPos < 100)
+    {
+      sendChat(CURTAIN, "posi", "0020", "0020");
+      curtainPos += 20;
+    }
+    else
+    {
+      sendChat(CURTAIN, "deac", "0000", "0000");
+    }
   }
   else
   {
-    sendChat(CURTAIN, "deac", "0000", "0000");
-  }} else {
     char level[4];
-    String paddedLevel = String("0000") + String(curtainLevel);
-  paddedLevel = paddedLevel.substring(paddedLevel.length() - 4);
-  paddedLevel.toCharArray(level, sizeof(level));
-    sendChat(CURTAIN, "manu", level, "0000");
+    String paddedLevel ;
+    paddedLevel= String("0000") + String( curtainLevel - curtainPos);
+    if (curtainLevel - curtainPos < 0)
+    {
+      paddedLevel = String("0000") + String(curtainPos - curtainLevel);
+    }
+    paddedLevel = paddedLevel.substring(paddedLevel.length() - 4);
+    paddedLevel.toCharArray(level, sizeof(level));
+    if (curtainLevel - curtainPos < 0)
+    {
+      sendChat(CURTAIN, "nega", paddedLevel, "0000");
+    }
+    else
+    {
+      sendChat(CURTAIN, "posi", paddedLevel, "0000");
+    }
+    curtainPos = curtainLevel;
   }
 
   delay(1000);
 }
 
-BLYNK_WRITE(V0) {
+BLYNK_WRITE(V0)
+{
   int curtainMode = param.asInt();
-  if (curtainMode == 1) {
+  if (curtainMode == 1)
+  {
     curtainCC.setMode(AUTO);
-  } else {
+  }
+  else
+  {
     curtainCC.setMode(MANUAL);
   }
 }
 
-BLYNK_WRITE(V1) {
+BLYNK_WRITE(V1)
+{
   curtainLevel = param.asInt();
   curtainCC.setLevel(curtainLevel);
 }

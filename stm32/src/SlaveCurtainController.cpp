@@ -5,6 +5,7 @@
 SlaveCurtainController::SlaveCurtainController(int MOTOR_PIN_IN1,int  MOTOR_PIN_IN2, int MOTOR_PWM): CurtainController(), MotorController(MOTOR_PIN_IN1, MOTOR_PIN_IN2, MOTOR_PWM)
 {
   // _motorController = motorController;
+  // _
 }
 
 void SlaveCurtainController::execute(char* command[3])
@@ -16,10 +17,10 @@ void SlaveCurtainController::execute(char* command[3])
   Serial.println("Nigga ::: "+mode);
   int level = atoi(command[1]);
   //CurtainController::setMode(mode);
-  int prevLevel = CurtainController::getLevel();
+  // int prevLevel = CurtainController::getLevel();
   MotorController::setPower(45);
   int duration = 10*(level);
-  Serial.println(prevLevel);
+  Serial.println(duration);
   if (mode == "posi")
   {
     MotorController::activate(FORWARD, duration);
@@ -32,7 +33,7 @@ void SlaveCurtainController::execute(char* command[3])
   {
     MotorController::activate(FORWARD, 0);
   }
-  CurtainController::setLevel(prevLevel+level);
+  // CurtainController::setLevel(prevLevel+level);
 }
 
 // void SlaveCurtainController::setMode(enum CurtainMode mode)
