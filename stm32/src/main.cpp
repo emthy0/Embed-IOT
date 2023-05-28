@@ -76,6 +76,7 @@ void setup()
   dht.setPin(DHT_PIN);
   mqc.setPin(MQ_PIN);
   ldrc.setPin(LDR_PIN);
+  pinMode(PC0, OUTPUT);
 
   // char* command[3] = {"0","-20","0"}; // pulls the curtain down
   //  curtain.setPin(PC7);
@@ -187,7 +188,7 @@ void loop()
   char cc[4] = {rawController[0], rawController[1], rawController[2], rawController[3]};
 
   // Serial.printf("Controller: %s | Command: %s | args %s %s\n", rawController, action, args1, args2);
-  if (cc != " "   )
+  if (cc != " ")
   // if (false)
   {
 
@@ -197,7 +198,7 @@ void loop()
       // curtain.execute(command);
       Serial.println("SlaveCurtainController::execute");
       // CurtainMode mode = (CurtainMode)atoi(command[0]);
-      char* rawAction = command[0];
+      char *rawAction = command[0];
       if (!isWindowOpen && rawAction[0] == 'o' && rawAction[1] == 'p' && rawAction[2] == 'e' && rawAction[3] == 'n')
       {
         for (int i = 0; i < 90; i++)
@@ -219,8 +220,21 @@ void loop()
         isWindowOpen = false;
       }
     }
+
+    else if (rawAction[0] == 'a' && rawAction[1] == 'c' && rawAction[2] == 't' && rawAction[3] == 'i')
+    {
+      for(int i=0 ; i<100 ; i++)
+      {
+        Serial.println("Bri~~");
+        digitalWrite(PC0, HIGH);
+        delay(10);
+        digitalWrite(PC0, LOW);
+        delay(10);
+      }
+    }
+
     else if (rawController[0] == 's' && rawController[1] == 'e' && rawController[2] == 'n')
-    
+
     {
       float co2, tvoc, temp, humid;
       int brightness, co, lpg, smoke;
