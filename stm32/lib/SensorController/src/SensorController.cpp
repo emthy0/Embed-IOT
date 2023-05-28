@@ -7,6 +7,7 @@ SensorController::SensorController(int dump) : DHTController(), MQController(), 
 
 void SensorController::setDHTpin(int pin)
 {
+    // DHTController::setPin(pin);
     DHTController::setPin(pin);
 }
 

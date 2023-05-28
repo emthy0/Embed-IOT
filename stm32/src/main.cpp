@@ -78,7 +78,7 @@ void setup()
   // sensor.setMQpin(MQ_PIN);
   // sensor.setLDRpin(LDR_PIN);
   Serial.println("Hello World in setup");
-  // xTaskCreate(loopThread, "loopThread", 10000, NULL, 1, NULL);
+  xTaskCreate(loopThread, "loopThread", 10000, NULL, 1, NULL);
   Serial.println("Hello World in setup2");
 
   Serial.print("Calibrating...\n");                
@@ -190,7 +190,7 @@ void loopThread(void *pvParameters)
         
         brightness = static_cast<int>(ldrc.getBrightness());
         Serial.println("Sending data");
-        Serial.println(temp);
+        Serial.println(dht.getTemperature());
         // Serial.printf("CO2: %d | TVOC: %d | Temperature: %d | Humidity: %d | CO: %d | LPG: %d | Smoke: %d | Brightness: %d \n", co2, tvoc, temp, humid, co, lpg, smoke, brightness);
         Serial.printf("CO2: %.2f | TVOC: %.2f | Temperature: %.2f| Humidity: %.2f | CO: %.2f| LPG: %.2f | Smoke: %.2f | Brightness: %d \n", co2, tvoc, temp, humid, co, lpg, smoke, brightness);
         float data[8] = {co2, tvoc, temp, humid, (float)co, (float)lpg, (float)smoke, (float)brightness};

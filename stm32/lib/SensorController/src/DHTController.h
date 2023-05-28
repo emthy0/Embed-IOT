@@ -12,6 +12,7 @@ public:
   void setPin(int pin);
   float getTemperature();
   float getHumidity();
+  // const char*  getError();
 
 private:
   int _pin = -1;

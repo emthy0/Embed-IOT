@@ -1,16 +1,23 @@
 #include <DHTController.h>
-#include "DHT.h"
+#include <pinconfig.h>
+#include <DHT.h>
+#define DHTTYPE DHT11 
 #include <GlobalSensorValue.h>
 
-DHTController::DHTController() 
-// : TaskClass("DHT Thread", 1000, 1000)
+DHTController::DHTController()
 {
+  #ifdef DHT_PIN
+    _pin = DHT_PIN;
+    setPin(_pin)
+  #endif
+  // _dht(_pin, DHTTYPE);
 }
 
 void DHTController::setPin(int pin)
 {
   _pin = pin;
-  _dht.setup(_pin);
+  _dht = DHT(_pin, DHTTYPE);
+  _dht.begin();
 }
 
 void DHTController::_setTemperature(int temperature)
@@ -29,25 +36,40 @@ void DHTController::_setHumidity(int humidity)
 
 float DHTController::getTemperature()
 {
-  return _dht.getTemperature();
+  float t = _dht.readTemperature();
+  if (!isnan(t)) {
+    _setTemperature(t);
+  }
+    
+    return _temperature;
+ 
 }
 
 float DHTController::getHumidity()
 {
-  return _dht.getHumidity();
+  float h = _dht.readHumidity();
+  if (!isnan(h)) {
+    _setHumidity(h);
+  }
+    return _humidity;
+  
 }
 
 void DHTController::classTask()
 {
   if (_pin != -1)
   {
-    this->_setTemperature(_dht.getTemperature());
-    this->_setHumidity(_dht.getHumidity());
-    vTaskDelay(_dht.getMinimumSamplingPeriod());
+    this->getHumidity();
+    this->getTemperature();
+    vTaskDelay(1000);
   }
   
 }
 
+// const char* DHTController::getError()
+// {
+//   return _dht.getStatusString();
+// }
 // void DHTController : Taskbase::taskfun(void *params)
 // {
 //   static_cast<DHTController *>(params)->readSensorThread();
