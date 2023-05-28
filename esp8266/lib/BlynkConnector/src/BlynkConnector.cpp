@@ -54,6 +54,16 @@ void BlynkConnector::SendBrightness(int Brightness)
   Blynk.virtualWrite(V15, Brightness);
 }
 
+void BlynkConnector::SendWindowOpen(bool WindowOpen)
+{
+  Blynk.virtualWrite(V0, WindowOpen);
+}
+
+void BlynkConnector::SendWindowMode(bool WindowMode)
+{
+  Blynk.virtualWrite(V1, WindowMode);
+}
+
 // int BlynkConnector::GetCurtainLevel()
 // {
 //   return _curtainController.getLevel();

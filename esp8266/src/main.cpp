@@ -18,7 +18,7 @@
 
 SoftwareSerial chat(D4, D3); // RX, TX
 String a;
-int curtainLevel, curtainMode;
+bool wantWindowOpen, windowOpen, windowMode;
 const char *blynkCred[5] = {BLYNK_TEMPLATE_ID, BLYNK_TEMPLATE_NAME, BLYNK_AUTH_TOKEN, BLYNK_SSID, BLYNK_PASS};
 
 // SoftwareSerial MasterCurtainController::chat (const chat&);
@@ -66,6 +66,7 @@ void setup()
   chat.begin(9600);
   Serial.begin(38400);
   blynk.SetupBlynk(blynkCred);
+  blynk.SendWindowMode(curtainCC.getMode() == AUTO);
   Serial.printf("\n\n\n\nInitializing NodeMCU\n\n");
 
   Serial.printf("\n\n\n\nInitialized NodeMCU\n\n");
@@ -104,62 +105,48 @@ void loop()
   blynk.SendTemperature(temp);
   blynk.SendHumidity(humid);
   blynk.SendBrightness(brightness);
-  if (brightness > 2)
+  if (curtainCC.getMode() == AUTO)
   {
-    sendChat(LED, "acti", "0000", "0000");
+    if (brightness < 2)
+    {
+      sendChat(CURTAIN, "clos", "0000", "0000");
+      windowOpen = false;
+    }
+    else if (brightness > 2)
+    {
+      sendChat(CURTAIN, "open", "0000", "0000");
+      windowOpen = true;
+    }
   }
-  else
-  {
-    sendChat(LED, "deac", "0000", "0000");
-  }
-  Serial.printf("Level: %d", curtainLevel);
 
-  if (smoke > 20)
+  if (smoke > 500 || co > 200 | lpg > 200)
   {
     sendChat(BUZZER, "acti", "0000", "0000");
+    wantWindowOpen = true;
   }
   else
   {
     sendChat(BUZZER, "deac", "0000", "0000");
   }
 
-  if (curtainCC.getMode() == AUTO)
-  {
-    if (brightness < 2)
+
+if (!wantWindowOpen)
     {
       sendChat(CURTAIN, "clos", "0000", "0000");
-    }
-    else if (brightness > 2)
-    {
-      sendChat(CURTAIN, "open", "0000", "0000");
-    }
-  }
-  else
-  {
-    char level[4];
-    String paddedLevel ;
-    paddedLevel= String("0000") + String( curtainLevel - curtainPos);
-    if (curtainLevel - curtainPos < 0)
-    {
-      paddedLevel = String("0000") + String(curtainPos - curtainLevel);
-    }
-    paddedLevel = paddedLevel.substring(paddedLevel.length() - 4);
-    paddedLevel.toCharArray(level, sizeof(level));
-    if (curtainLevel - curtainPos < 0)
-    {
-      sendChat(CURTAIN, "clos", "0000", "0000");
+
     }
     else
     {
       sendChat(CURTAIN, "open", "0000", "0000");
     }
-    curtainPos = curtainLevel;
-  }
+    windowOpen = wantWindowOpen;
+    blynk.SendWindowOpen(windowOpen);
+  
 
   delay(1000);
 }
 
-BLYNK_WRITE(V0)
+BLYNK_WRITE(V1)
 {
   int curtainMode = param.asInt();
   if (curtainMode == 1)
@@ -172,8 +159,15 @@ BLYNK_WRITE(V0)
   }
 }
 
-BLYNK_WRITE(V1)
+BLYNK_WRITE(V0)
 {
-  curtainLevel = param.asInt();
-  curtainCC.setLevel(curtainLevel);
+  int ws = param.asInt();
+  if (ws == 1 && curtainCC.getMode() == MANUAL)
+  {
+    wantWindowOpen = true;
+  }
+  else if (ws == 0 && curtainCC.getMode() == MANUAL)
+  {
+    wantWindowOpen = false;
+  }
 }

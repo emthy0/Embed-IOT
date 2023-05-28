@@ -21,6 +21,8 @@ class BlynkConnector
     void SendTVOC(double TVOC);
     void SendBrightness(int Brightness);
     void SetupBlynk(const char* blynkCred[5]);
+    void SendWindowMode(bool WindowMode);
+    void SendWindowOpen(bool WindowOpen);
     // int GetCurtainLevel();
     // int GetCurtaionMode();
   private:

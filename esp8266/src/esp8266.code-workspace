@@ -29,7 +29,8 @@
 			"xloctime": "cpp",
 			"functional": "cpp",
 			"queue": "cpp",
-			"random": "cpp"
+			"random": "cpp",
+			"*.tcc": "cpp"
 		},
 		"conventionalCommits.scopes": [
 			"BlynkConnecotr"
