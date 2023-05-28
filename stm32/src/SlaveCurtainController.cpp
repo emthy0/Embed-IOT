@@ -1,11 +1,17 @@
 #include "Arduino.h"
 #include "CurtainController.h"
-#include <MotorController.h>
+#include <ServoController.h>
 #include <SlaveCurtainController.h>
-SlaveCurtainController::SlaveCurtainController(int MOTOR_PIN_IN1,int  MOTOR_PIN_IN2, int MOTOR_PWM): CurtainController(), MotorController(MOTOR_PIN_IN1, MOTOR_PIN_IN2, MOTOR_PWM)
+SlaveCurtainController::SlaveCurtainController(): CurtainController(), ServoController("CurtainServo")
 {
   // _motorController = motorController;
   // _
+}
+
+void SlaveCurtainController::setPin(int pin)
+{
+  ServoController::setPin(pin);
+  ServoController::setAngle(0);
 }
 
 void SlaveCurtainController::execute(char* command[3])
@@ -14,25 +20,16 @@ void SlaveCurtainController::execute(char* command[3])
   //CurtainMode mode = (CurtainMode)atoi(command[0]);
   String rawAction = command[0];
   String mode = String(rawAction[0]) + String(rawAction[1]) + String(rawAction[2]) + String(rawAction[3]);
-  Serial.println("Nigga ::: "+mode);
-  int level = atoi(command[1]);
-  //CurtainController::setMode(mode);
-  // int prevLevel = CurtainController::getLevel();
-  MotorController::setPower(45);
-  int duration = 10*(level);
-  Serial.println(duration);
-  if (mode == "posi")
+  Serial.println("Setting Curtain: " + mode);
+  if (mode == "open")
   {
-    MotorController::activate(FORWARD, duration);
+    ServoController::setAngle(90);
   }
-  else if (mode == "nega")
+  else if (mode == "clos")
   {
-    MotorController::activate(BACKWARD, duration);
+    ServoController::setAngle(0);
   }
-  else
-  {
-    MotorController::activate(FORWARD, 0);
-  }
+  return;
   // CurtainController::setLevel(prevLevel+level);
 }
 

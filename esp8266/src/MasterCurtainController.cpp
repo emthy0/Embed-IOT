@@ -6,7 +6,7 @@
 MasterCurtainController::MasterCurtainController(SoftwareSerial& serial):  _chat(serial)
 {
   // _chat = &serial;
-  _currentLevel = 0;
+  _currentLevel = 1;
   _currentMode = MANUAL;
 }
 

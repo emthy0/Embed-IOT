@@ -9,14 +9,14 @@
 #include <BlynkConnector.h>
 #include <MasterCurtainController.h>
 
-#define STM_RX D2
+#define STM_RX D4
 #define STM_TX D3
 
 
 #define CURTAIN_RX D6
 #define CURTAIN_TX D7
 
-SoftwareSerial chat(D2, D3); // RX, TX
+SoftwareSerial chat(D4, D3); // RX, TX
 String a;
 int curtainLevel, curtainMode;
 const char *blynkCred[5] = {BLYNK_TEMPLATE_ID, BLYNK_TEMPLATE_NAME, BLYNK_AUTH_TOKEN, BLYNK_SSID, BLYNK_PASS};
@@ -79,8 +79,9 @@ void loop()
   count++;
   byte dataBytes[sizeof(float) * 8];
   sendChat(SENSOR, "0000", "0000", "0000");
-
+  
   chat.readBytes(dataBytes, sizeof(float) * 8);
+  Serial.printf("Data: %s\n", dataBytes);
   memcpy(&co2, dataBytes, sizeof(float));
   memcpy(&tvoc, dataBytes + sizeof(float), sizeof(float));
   memcpy(&temp, dataBytes + sizeof(float) * 2, sizeof(float));
@@ -124,19 +125,13 @@ void loop()
 
   if (curtainCC.getMode() == AUTO)
   {
-    if (brightness < 2 && curtainPos > 0)
+    if (brightness < 2)
     {
-      sendChat(CURTAIN, "nega", "0020", "0020");
-      curtainPos -= 20;
+      sendChat(CURTAIN, "clos", "0000", "0000");
     }
-    else if (brightness > 2 && curtainPos < 100)
+    else if (brightness > 2)
     {
-      sendChat(CURTAIN, "posi", "0020", "0020");
-      curtainPos += 20;
-    }
-    else
-    {
-      sendChat(CURTAIN, "deac", "0000", "0000");
+      sendChat(CURTAIN, "open", "0000", "0000");
     }
   }
   else
@@ -152,11 +147,11 @@ void loop()
     paddedLevel.toCharArray(level, sizeof(level));
     if (curtainLevel - curtainPos < 0)
     {
-      sendChat(CURTAIN, "nega", paddedLevel, "0000");
+      sendChat(CURTAIN, "clos", "0000", "0000");
     }
     else
     {
-      sendChat(CURTAIN, "posi", paddedLevel, "0000");
+      sendChat(CURTAIN, "open", "0000", "0000");
     }
     curtainPos = curtainLevel;
   }

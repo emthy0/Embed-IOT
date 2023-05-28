@@ -3,18 +3,20 @@
 
 
 #include <CurtainController.h>
-#include <MotorController.h>
+#include <ServoController.h>
 
-class SlaveCurtainController : public CurtainController , private MotorController
+class SlaveCurtainController : public CurtainController , public ServoController
 {
     public:
-        SlaveCurtainController(int motor_pinIn1 ,int  motor_pinIn2, int motor_pinPWM);
+        SlaveCurtainController();
+        void setPin(int pin);
         // void setMode(enum CurtainMode mode);
         // void setLevel(int level);
         // int getLevel();
         void execute(char* command[3]);
     private:
         // MotorController& _motorController;
+        // ServoController __servoController;
         int _currentLevel;
         int _currentMode;
         

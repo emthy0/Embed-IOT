@@ -2,9 +2,9 @@
 #define SERVOCONTROLLER_H
 #include <Arduino.h>
 #include <TaskBase.h>
+#include <servo.h>
 
-
-class ServoController : TaskClass
+class ServoController
 {
     public:
     ServoController(char* name);
@@ -12,7 +12,10 @@ class ServoController : TaskClass
     void setAngle(int angle);
     int getAngle();
 private:
+    Servo _servo;
     int _pin = -1;
     int _angle = 0;
     void classTask();
-}
+};
+
+#endif

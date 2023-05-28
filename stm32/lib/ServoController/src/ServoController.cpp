@@ -1,6 +1,6 @@
 #include <ServoController.h>
 
-ServoController::ServoController(char* name) : TaskClass(name,1000,1000)
+ServoController::ServoController(char* name)
 {
     #ifdef SERVO_PIN
         this->setPin(SERVO_PIN);
@@ -16,23 +16,27 @@ void ServoController::setPin(int pin)
 
 void ServoController::setAngle(int angle)
 {
-    if (angle == _angle)
-    {
-        return;
-    }
-    int angle = max(0, min(180, angle));
+    // if (angle == _angle)
+    // {
+    //     return;
+    // }
+    angle = max(0, min(180, angle));
     if (angle < _angle)
     {
         for (int i = _angle; i > angle; i--)
         {
+            Serial.println(i);
             _servo.write(i);
-            vTaskDelay(10);
+            delay(150);
+            // vTaskDelay(150);
         }
     } else {
         for (int i = _angle; i < angle; i++)
         {
+            Serial.println(i);
             _servo.write(i);
-            vTaskDelay(10);
+            delay(150);
+            // vTaskDelay(150);
         }
     }
     _angle = angle;

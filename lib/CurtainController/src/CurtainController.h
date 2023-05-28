@@ -9,6 +9,13 @@ enum CurtainMode
   AUTO
 };
 
+// enum CurtainState
+// {
+//   STOPPED,
+//   OPENING,
+//   CLOSING
+// };
+
 enum ControllerMode
 {
   MASTER,
@@ -29,6 +36,7 @@ class CurtainController
     int _pin;
     int _currentLevel;
     CurtainMode _currentMode;
+    // CurtainState _currentState;
     int _controllerMode = CONTROLLER_PLATFORM;
 };
 
