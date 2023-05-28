@@ -5,7 +5,7 @@
 #include <Wire.h>
 #include <SoftwareSerial.h>
 #include <servo.h>
-
+Servo myServo;
 SGP30 mySensor; //create an object of the SGP30 class
 DHT dht;
 
@@ -29,7 +29,10 @@ void setup()
 {
   chat.begin(4800);
   Serial.begin(9600);
-
+    myServo.attach(PC7);
+  // myServo.write(90);
+  // delay(1000);
+  // myServo.write(0);
   // while (!Serial); // wait for serial port to connect. Needed for native USB port only
   
   // Serial.println("Status\tHumidity (%)\tTemperature (C)\t(F)");
@@ -47,68 +50,30 @@ void setup()
   //mySensor.initAirQuality();
 
   // setup task
-  xTaskCreate(servoThread, "servoThread2", 128, NULL, 1, NULL);
-  vTaskStartScheduler();
+  // xTaskCreate(servoThread, "servoThread2", 128, NULL, 1, NULL);
+  // vTaskStartScheduler();
   
 }
 
 int counter = 0;
 void loop()
 {
-  //delay(dht.getMinimumSamplingPeriod());
-
-  //float humidity = dht.getHumidity(); // ดึงค่าความชื้น
-  //float temperature = dht.getTemperature(); // ดึงค่าอุณหภูมิ
-
-  //Serial.print(dht.getStatusString());
-  //Serial.print("\t");
-  //Serial.print(humidity, 1);
-  //Serial.print("\t\t");
-  //Serial.print(temperature, 1);
-  //Serial.print("\t\t");
-  //Serial.println(dht.toFahrenheit(temperature), 1);
-
-  //First fifteen readings will be
-  //CO2: 400 ppm  TVOC: 0 ppb
-  //delay(1000); //Wait 1 second
-  //measure CO2 and TVOC levels
-  //mySensor.measureAirQuality();
-  //Serial.print("CO2: ");
-  //Serial.print(mySensor.CO2);
-  //Serial.print(" ppm\tTVOC: ");
-  //Serial.print(mySensor.TVOC);
-  //Serial.println(" ppb");
-  //delay(1000);
-   if (chat.readString()){
-    Serial.println("Chat recv!!");
-     if(chat.readString()== "Q1"){ //มีการถามคำถาม Question1 ส่งข้อมูลตัวแปร a ออกไป
-        delay(dht.getMinimumSamplingPeriod());
-
-        float humidity = dht.getHumidity(); // ดึงค่าความชื้น
-        float temperature = dht.getTemperature(); // ดึงค่าอุณหภูมิ
-
-        //chat.print(dht.getStatusString());
-        chat.println(humidity);
-        Serial.println(humidity);
-        //chat.print(temperature);
-        //chat.print(dht.toFahrenheit(temperature));
-
-     }
-
-     else if(chat.readString()== "Q2"){ //มีการถามคำถาม Question2 ส่งข้อมูลตัวแปร b ออกไป
-
-      chat.print(b);
-
-     }
-
-      Serial.print("Send = ");
-
-      Serial.println(i);
-
-  }
-
-  i++;
-  //delay(1000);
+    //   myServo.write(10);
+//     myServo.write(0);
+//     delay(1000);
+//     myServo.write(90);
+// delay(1000);
+    for (servoPos = 0; servoPos <= 90; servoPos += 1) { 
+        myServo.write(servoPos);
+        Serial.println(servoPos);                
+        delay(15);                       
+    }
+    Serial.println("to 2nd for");
+    for (servoPos = 90; servoPos >= 0; servoPos -= 1) { 
+        myServo.write(servoPos); 
+        Serial.println(servoPos);        
+        delay(15);                       
+    }
 }
 
 
@@ -116,9 +81,9 @@ void loop()
 void servoThread(void * pvParameters){
 
   // setup
-  Servo myServo;
+
   (void) pvParameters;
-  myServo.attach(PC7);
+
 
   // loop
   while(true){
@@ -126,19 +91,20 @@ void servoThread(void * pvParameters){
       vTaskDelay(15);
       continue;
     }
-    // myServo.write(10);
-    // myServo.write(45);
-    // myServo.write(90);
-    for (servoPos = 0; servoPos <= 90; servoPos += 1) { 
-        myServo.write(servoPos);
-        Serial.println(servoPos);                
-        vTaskDelay(15);                       
-    }
-    Serial.println("to 2nd for");
-    for (servoPos = 90; servoPos >= 0; servoPos -= 1) { 
-        myServo.write(servoPos); 
-        Serial.println(servoPos);        
-        vTaskDelay(15);                       
-    }
+    myServo.write(10);
+    vTaskDelay(1000);
+    myServo.write(45);
+    myServo.write(90);
+    // for (servoPos = 0; servoPos <= 90; servoPos += 1) { 
+    //     myServo.write(servoPos);
+    //     Serial.println(servoPos);                
+    //     vTaskDelay(15);                       
+    // }
+    // Serial.println("to 2nd for");
+    // for (servoPos = 90; servoPos >= 0; servoPos -= 1) { 
+    //     myServo.write(servoPos); 
+    //     Serial.println(servoPos);        
+    //     vTaskDelay(15);                       
+    // }
   }
 }
