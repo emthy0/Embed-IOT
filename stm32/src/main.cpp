@@ -135,6 +135,8 @@ Controllers getController(char rcontroller[4])
   }
 }
 
+bool isWindowOpen = false;
+
 void loop()
 
 {
@@ -196,23 +198,25 @@ void loop()
       Serial.println("SlaveCurtainController::execute");
       // CurtainMode mode = (CurtainMode)atoi(command[0]);
       char* rawAction = command[0];
-      if (rawAction[0] == 'o' && rawAction[1] == 'p' && rawAction[2] == 'e' && rawAction[3] == 'n')
+      if (!isWindowOpen && rawAction[0] == 'o' && rawAction[1] == 'p' && rawAction[2] == 'e' && rawAction[3] == 'n')
       {
-        for (int i = 180; i > 0; i--)
+        for (int i = 0; i < 90; i++)
         {
           Serial.println(i);
           myServo.write(i);
           delay(15);
         }
+        isWindowOpen = true;
       }
-      else if (rawAction[0] == 'c' && rawAction[1] == 'l')
+      else if (isWindowOpen && rawAction[0] == 'c' && rawAction[1] == 'l')
       {
-        for (int i = 0; i < 180; i++)
+        for (int i = 90; i > 0; i--)
         {
           Serial.println(i);
           myServo.write(i);
           delay(15);
         }
+        isWindowOpen = false;
       }
     }
     else if (rawController[0] == 's' && rawController[1] == 'e' && rawController[2] == 'n')
