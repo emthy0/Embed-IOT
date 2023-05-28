@@ -1,18 +1,48 @@
 #include "Arduino.h"
 #include "CurtainController.h"
-#include <ServoController.h>
-#include <SlaveCurtainController.h>
-SlaveCurtainController::SlaveCurtainController(): CurtainController(), ServoController("CurtainServo")
+#include "SlaveCurtainController.h"
+// #include <ServoController.h>
+#include <servo.h>
+
+Servo __servoController;
+
+SlaveCurtainController::SlaveCurtainController(int pin): CurtainController()
 {
   // _motorController = motorController;
   // _
+  __servoController.attach(pin);
+  _angle = 0;
 }
 
-void SlaveCurtainController::setPin(int pin)
+void SlaveCurtainController::_setAngle(int angle)
 {
-  this->setServoPin(pin);
-  this->setAngle(0);
+    // if (angle == _angle)
+    // {
+    //     return;
+    // }
+    angle = max(0, min(180, angle));
+    if (angle < _angle)
+    {
+        for (int i = _angle; i > angle; i--)
+        {
+            Serial.println(i);
+            __servoController.write(i);
+            // delay(150);
+            // vTaskDelay(150);
+        }
+    } else {
+        for (int i = _angle; i < angle; i++)
+        {
+            Serial.println(i);
+            __servoController.write(i);
+            // delay(150);
+            // vTaskDelay(150);
+        }
+    }
+    _angle = angle;
+
 }
+
 
 void SlaveCurtainController::execute(char* command[3])
 {
@@ -23,11 +53,11 @@ void SlaveCurtainController::execute(char* command[3])
   Serial.println("Setting Curtain: " + mode);
   if (mode == "open")
   {
-    this->setAngle(90);
+    this->_setAngle(90);
   }
   else if (mode == "clos")
   {
-    this->setAngle(0);
+    this->_setAngle(0);
   }
   return;
   // CurtainController::setLevel(prevLevel+level);

@@ -5,11 +5,10 @@
 #include <CurtainController.h>
 #include <ServoController.h>
 
-class SlaveCurtainController : public CurtainController , public ServoController
+class SlaveCurtainController : public CurtainController
 {
     public:
-        SlaveCurtainController();
-        void setPin(int pin);
+        SlaveCurtainController(int pin);
         // void setMode(enum CurtainMode mode);
         // void setLevel(int level);
         // int getLevel();
@@ -17,6 +16,9 @@ class SlaveCurtainController : public CurtainController , public ServoController
     private:
         // MotorController& _motorController;
         // ServoController __servoController;
+        int _angle;
+        void _setAngle(int angle);
+        
         int _currentLevel;
         int _currentMode;
         

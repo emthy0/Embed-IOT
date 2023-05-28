@@ -16,6 +16,7 @@
 #include <MQController.h>
 #include <SGPController.h>
 #include <LDRController.h>
+#include <servo.h>
 
 #define         MQ_PIN                       (PA1)       
 #define         RL_VALUE                     (PA1)     
@@ -41,8 +42,8 @@ MQController mqc;
 // SGPController sgpc;
 LDRController ldrc;
 LEDController led(LED_PIN);
-SlaveCurtainController curtain;
-
+// SlaveCurtainController curtain(PC7);
+Servo myServo;
 // MotorController motor(MOTOR_PIN_IN1, MOTOR_PIN_IN2, MOTOR_PWM);
 // SlaveChatController::chat = SoftwareSerial(ESP_RX, ESP_TX)
 // SlaveChatController slaveChatController(ESP_RX, ESP_TX, ESP_BAUDRATE);
@@ -71,14 +72,14 @@ void setup()
   dht.setPin(DHT_PIN);
   mqc.setPin(MQ_PIN);
   ldrc.setPin(LDR_PIN);
-
+  myServo.attach(PC7);
   //char* command[3] = {"0","-20","0"}; // pulls the curtain down
-  curtain.setPin(PC7);
-  char* command[3] = {"open","0000","0000"}; // pulls the curtain up
-  curtain.execute(command);
-  delay(1000);
-  char* command2[3] = {"clos","0000","0000"}; // pulls the curtain up
-  curtain.execute(command2);
+  // curtain.setPin(PC7);
+  // char* command[3] = {"open","0000","0000"}; // pulls the curtain up
+  // curtain.execute(command);
+  // delay(1000);
+  // char* command2[3] = {"clos","0000","0000"}; // pulls the curtain up
+  // curtain.execute(command2);
   // curtain::setAngle(0);
   // sensor.setDHTpin(DHT_PIN);
   // sensor.setMQpin(MQ_PIN);
@@ -175,7 +176,29 @@ void loopThread(void *pvParameters)
       }
       else if (controller == CURTAIN)
       {
-        curtain.execute(command);
+        // curtain.execute(command);
+          Serial.println("SlaveCurtainController::execute");
+          //CurtainMode mode = (CurtainMode)atoi(command[0]);
+          String rawAction = command[0];
+          String mode = String(rawAction[0]) + String(rawAction[1]) + String(rawAction[2]) + String(rawAction[3]);
+          Serial.println("Setting Curtain: " + mode);
+          if (mode == "open")
+          {
+            for (int i = 90; i > 0 ; i--)
+            {
+                Serial.println(i);
+                myServo.write(i);
+            }
+          }
+          else if (mode == "clos")
+          {
+            for (int i = 0; i < 90 ; i++)
+            {
+                Serial.println(i);
+                myServo.write(i);
+            }
+          }
+
       }
       else if (controller == LED)
       {
@@ -257,7 +280,31 @@ void loop()
       }
       else if (controller == CURTAIN)
       {
-        curtain.execute(command);
+        // curtain.execute(command);
+          Serial.println("SlaveCurtainController::execute");
+          //CurtainMode mode = (CurtainMode)atoi(command[0]);
+          String rawAction = command[0];
+          String mode = String(rawAction[0]) + String(rawAction[1]) + String(rawAction[2]) + String(rawAction[3]);
+          Serial.println("Setting Curtain: " + mode);
+          if (mode == "open")
+          {
+            for (int i = 90; i > 0 ; i--)
+            {
+                Serial.println(i);
+                myServo.write(i);
+                delay(15);
+            }
+          }
+          else if (mode == "clos")
+          {
+            for (int i = 0; i < 90 ; i++)
+            {
+                Serial.println(i);
+                myServo.write(i);
+                delay(15);
+            }
+          }
+
       }
       else if (controller == LED)
       {
