@@ -126,13 +126,16 @@ void servoThread(void * pvParameters){
       vTaskDelay(15);
       continue;
     }
-    for (servoPos = 0; servoPos <= 360; servoPos += 1) { 
+    // myServo.write(10);
+    // myServo.write(45);
+    // myServo.write(90);
+    for (servoPos = 0; servoPos <= 90; servoPos += 1) { 
         myServo.write(servoPos);
         Serial.println(servoPos);                
         vTaskDelay(15);                       
     }
     Serial.println("to 2nd for");
-    for (servoPos = 180; servoPos >= 0; servoPos -= 1) { 
+    for (servoPos = 90; servoPos >= 0; servoPos -= 1) { 
         myServo.write(servoPos); 
         Serial.println(servoPos);        
         vTaskDelay(15);                       
