@@ -8,7 +8,7 @@ ServoController::ServoController(char* name)
     this->setAngle(0);
 }
 
-void ServoController::setPin(int pin)
+void ServoController::setServoPin(int pin)
 {
     _pin = pin;
     _servo.attach(_pin);

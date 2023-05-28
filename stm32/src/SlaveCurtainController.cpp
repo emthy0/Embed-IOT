@@ -10,8 +10,8 @@ SlaveCurtainController::SlaveCurtainController(): CurtainController(), ServoCont
 
 void SlaveCurtainController::setPin(int pin)
 {
-  ServoController::setPin(pin);
-  ServoController::setAngle(0);
+  this->setServoPin(pin);
+  this->setAngle(0);
 }
 
 void SlaveCurtainController::execute(char* command[3])
@@ -23,11 +23,11 @@ void SlaveCurtainController::execute(char* command[3])
   Serial.println("Setting Curtain: " + mode);
   if (mode == "open")
   {
-    ServoController::setAngle(90);
+    this->setAngle(90);
   }
   else if (mode == "clos")
   {
-    ServoController::setAngle(0);
+    this->setAngle(0);
   }
   return;
   // CurtainController::setLevel(prevLevel+level);

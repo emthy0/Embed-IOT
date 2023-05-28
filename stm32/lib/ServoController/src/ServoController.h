@@ -8,7 +8,7 @@ class ServoController
 {
     public:
     ServoController(char* name);
-    void setPin(int pin);
+    void setServoPin(int pin);
     void setAngle(int angle);
     int getAngle();
 private:
