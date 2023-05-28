@@ -94,12 +94,12 @@ void setup()
   Serial.println("Hello World in setup2");
 
   Serial.print("Calibrating...\n");
-  // float Ro = mqc._MQCalibration(MQ_PIN); // Calibrating the sensor. Please make sure the sensor is in clean air
+  float Ro = mqc._MQCalibration(MQ_PIN); // Calibrating the sensor. Please make sure the sensor is in clean air
   // when you perform the calibration
   Serial.print("Calibration is done...\n");
 
   Serial.print("Ro=");
-  // Serial.print(Ro);
+  Serial.print(Ro);
   Serial.print("kohm");
   Serial.print("\n");
 
@@ -221,7 +221,11 @@ void loop()
       }
     }
 
-    else if (rawAction[0] == 'a' && rawAction[1] == 'c' && rawAction[2] == 't' && rawAction[3] == 'i')
+    else if (rawController[0] == 'b' && rawController[1] == 'u' && rawController[2] == 'z' && rawController[3] == 'z')
+    
+    {
+      char *rawAction = command[0];
+      if (rawAction[0] == 'a' && rawAction[1] == 'c' && rawAction[2] == 't' && rawAction[3] == 'i')
     {
       for(int i=0 ; i<100 ; i++)
       {
@@ -231,7 +235,7 @@ void loop()
         digitalWrite(PC0, LOW);
         delay(10);
       }
-    }
+    }}
 
     else if (rawController[0] == 's' && rawController[1] == 'e' && rawController[2] == 'n')
 
